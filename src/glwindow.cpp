@@ -94,6 +94,7 @@ GLuint loadShaderProgram(const char* vertShaderFilename,
 
 OpenGLWindow::OpenGLWindow()
 {
+
 }
 
 
@@ -151,18 +152,22 @@ void OpenGLWindow::initGL()
 
     int colorLoc = glGetUniformLocation(shader, "objectColor");
     glUniform3f(colorLoc, 1.0f, 1.0f, 1.0f);
-
+    
     // Load the model that we want to use and buffer the vertex attributes
     //GeometryData geometry = loadOBJFile("tri.obj");
+    GeometryData geometry;
+    geometry.loadFromOBJFile("doggo.obj");//,vertices, uvs, normals)
+    float *vertexPositions = (float*)geometry.vertexData();
 
     int vertexLoc = glGetAttribLocation(shader, "position");
-    float vertices[9] = { 0.0f,  0.5f, 0.0f,
-                         -0.5f, -0.5f, 0.0f,
-                          0.5f, -0.5f, 0.0f };
+    //int vertexCount = geometry.vertexCount();
+    //float vertices[vertexCount] = { 0.0f,  0.5f, 0.0f,
+    //                     -0.5f, -0.5f, 0.0f,
+    //                      0.5f, -0.5f, 0.0f };
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 9*sizeof(float), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, false, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, 9*sizeof(float), vertexPositions, GL_STATIC_DRAW);
+    glVertexAttribPointer(vertexLoc, 36, GL_FLOAT, false, 0, 0);
     glEnableVertexAttribArray(vertexLoc);
 
     glPrintError("Setup complete", true);
@@ -170,6 +175,7 @@ void OpenGLWindow::initGL()
 
 void OpenGLWindow::render()
 {
+    cout << "Here" << endl;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);

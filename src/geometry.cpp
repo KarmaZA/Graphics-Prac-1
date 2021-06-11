@@ -34,7 +34,7 @@ enum OBJDataType
 void GeometryData::loadFromOBJFile(string filename)
 {
     GeometryData tempGeom;
-
+	
     ifstream inStream;
     inStream.open(filename, ifstream::in);
     if(inStream.fail())

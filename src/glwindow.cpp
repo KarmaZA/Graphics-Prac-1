@@ -175,11 +175,11 @@ void OpenGLWindow::initGL()
 
 void OpenGLWindow::render()
 {
-    cout << "Here" << endl;
+    //cout << "Here" << endl;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-
+    glDrawArrays(GL_TRIANGLES, 0, 3); //Well the problem is here
+    cout << "here" << endl;
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)
     SDL_GL_SwapWindow(sdlWin);
@@ -197,6 +197,21 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         {
             return false;
         }
+    }
+    if(s.type == SDL_KEYDOWN){
+	//scale +
+    }
+    if(a.type == SDL_KEYDOWN){
+	//scale -
+    }
+    if(z.type == SDL_KEYDOWN){
+	//z axis rotation
+    }
+    if(x.type == SDL_KEYDOWN){
+	//x axis rotation
+    }
+    if(c.type == SDL_KEYDOWN){
+	//y axis rotation
     }
     return true;
 }

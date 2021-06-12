@@ -159,6 +159,7 @@ void OpenGLWindow::initGL()
     glCullFace(GL_BACK);
     glClearColor(0,0,0,1);
 
+    //VAO here for object 1 - Doggo
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -178,10 +179,8 @@ void OpenGLWindow::initGL()
     float *vertexPositions = (float*)geometry.vertexData();
 
     int vertexLoc = glGetAttribLocation(shader, "position");
-    //int vertexCount = geometry.vertexCount();
-    //float vertices[vertexCount] = { 0.0f,  0.5f, 0.0f,
-    //                     -0.5f, -0.5f, 0.0f,
-    //                      0.5f, -0.5f, 0.0f };
+    
+    
     glGenBuffers(1, &vertexBuffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -204,18 +203,15 @@ void OpenGLWindow::initGL()
     WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
     //perspective
     //Values are interim and probablynot correct
-    glm::mat4 modelTransformMatrix = glm::translate(glm::mat4(),cameraDirection);
+    glm::mat4 translationsMatrix = glm::translate(glm::mat4(),cameraDirection);
+    glm::mat4 rotationMatrix = glm::rotate(glm::mat4(),52.0f,glm::vec3(0.0f,0.0f,0.0f));
     projectionMatrix =glm::perspective(60.0f,((float)640/480),1.0f, 100.0f);
+
+    glm::mat4 fullTransformMatrix = projectionMatrix * translationsMatrix * rotationMatrix;
     
     //\/ GPU locations of uniform mat4 in simple.frag
-    GLint modelTransformMatrixUniformLocation = glGetUniformLocation(programID, "modelTransfromMatrix");
-    GLint projectionMatrixUniformLocation = glGetUniformLocation(programID,"projectionMatrix");
-
-    glUniformMatrix4fv(modelTransformMatrixUniformLocation,1,GL_FALSE, &modelTransformMatrix[0][0]);
-    glUniformMatrix4fv(projectionMatrixUniformLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
-
-    //^6 lines sends the vertex data down to our shader.
-
+    GLint fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
+    glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &fullTransformMatrix[0][0]);
     //transform = model
 
 

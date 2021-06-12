@@ -2,9 +2,6 @@
 
 uniform vec3 objectColor;
 
-uniform mat4 modelTransfromMatrix;
-uniform mat4 projectionMatrix;
-
 out vec4 outColor;
 
 void main()

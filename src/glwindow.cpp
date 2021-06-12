@@ -18,13 +18,15 @@ glm::mat4 WorldViewToMatrix;
 //projection
 glm::mat4 projectionMatrix;
 //Transform
-glm::mat4 transform;
+glm::vec4 transform;
 //Scale modifier;
 GLint scale = 1;
 //rotation modifier
 GLint rotation = 1;
 //Shift modifier
 GLint shift = 1;
+
+GLuint programID;
 
 
 
@@ -202,9 +204,21 @@ void OpenGLWindow::initGL()
     WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
     //perspective
     //Values are interim and probablynot correct
+    glm::mat4 modelTransformMatrix = glm::translate(glm::mat4(),cameraDirection);
     projectionMatrix =glm::perspective(60.0f,((float)640/480),1.0f, 100.0f);
     
-    
+    //\/ GPU locations of uniform mat4 in simple.frag
+    GLint modelTransformMatrixUniformLocation = glGetUniformLocation(programID, "modelTransfromMatrix");
+    GLint projectionMatrixUniformLocation = glGetUniformLocation(programID,"projectionMatrix");
+
+    glUniformMatrix4fv(modelTransformMatrixUniformLocation,1,GL_FALSE, &modelTransformMatrix[0][0]);
+    glUniformMatrix4fv(projectionMatrixUniformLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+    //^6 lines sends the vertex data down to our shader.
+
+    //transform = model
+
+
 }
 
 void OpenGLWindow::render()
@@ -212,9 +226,9 @@ void OpenGLWindow::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //scale
-
+    //glm::scale
     //rotation xyz
-
+    //glm::rotate
 
     //normalise
 

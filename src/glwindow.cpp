@@ -19,6 +19,8 @@ glm::mat4 WorldViewToMatrix;
 glm::mat4 projectionMatrix;
 glm::mat4 translationsMatrix;
 glm::mat4 rotationMatrix;
+
+GLint fullTransformMatrixUniformLocation;
 //Transform
 glm::vec4 transform;
 //Scale modifier;
@@ -28,7 +30,7 @@ GLint rotation = 1;
 //Shift modifier
 GLint shift = 1;
 
-GLuint programID;
+//GLuint programID;
 
 
 
@@ -177,7 +179,7 @@ void OpenGLWindow::initGL()
     // Load the model that we want to use and buffer the vertex attributes
     //GeometryData geometry = loadOBJFile("tri.obj");
     GeometryData geometry;
-    geometry.loadFromOBJFile("doggo.obj");//,vertices, uvs, normals)
+    geometry.loadFromOBJFile("doggo.obj");
     float *vertexPositions = (float*)geometry.vertexData();
 
     int vertexLoc = glGetAttribLocation(shader, "position");
@@ -186,7 +188,7 @@ void OpenGLWindow::initGL()
     glGenBuffers(1, &vertexBuffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 5613*3*sizeof(float), geometry.vertexData(), GL_STATIC_DRAW); //fixed seg fault still no picture
+    glBufferData(GL_ARRAY_BUFFER, 5613*3*sizeof(float), geometry.vertexData(), GL_STATIC_DRAW); 
     
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(vertexLoc);
@@ -197,26 +199,27 @@ void OpenGLWindow::initGL()
     *  Setting up the camera
     */
 
-    glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,0.0f);
+    /*glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,0.0f);
     glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,-1.0f);
     glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
     //^Setting up a view position and a view direction for the camera
     
-    WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
+    //WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
     //perspective
     //Values are interim and probablynot correct
-    translationsMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f,0.0f,3.0f));//cameraDirection);
-    rotationMatrix = glm::rotate(glm::mat4(),52.0f,glm::vec3(0.0f,0.0f,0.0f));
     projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 10.0f);
-
-    glm::mat4 fullTransformMatrix = projectionMatrix * translationsMatrix * rotationMatrix;
+    translationsMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f,0.0f,-3.0f));//cameraDirection);
+    rotationMatrix = glm::rotate(glm::mat4(),52.0f,glm::vec3(0.0f,0.0f,0.0f));
+    
+*/
+    //glm::mat4 fullTransformMatrix = projectionMatrix * translationsMatrix * rotationMatrix;
     
     //\/ GPU locations of uniform mat4 in simple.frag
-    GLint fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
-    glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &fullTransformMatrix[0][0]);
+    //fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
+    //glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &fullTransformMatrix[0][0]);
     //transform = model
 
-
+    //glDrawElements(GL_TRIANGLES,5136,GL_UNSIGNED_SHORT,0);
 }
 
 void OpenGLWindow::render()
@@ -231,13 +234,12 @@ void OpenGLWindow::render()
     //normalise
 
     //bind
+    //glBindVertexArray(fullTransformMatrixUniformLocation);
 
     glDrawArrays(GL_TRIANGLES, 0, 5136);
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)
     SDL_GL_SwapWindow(sdlWin);
-
-
 }
 
 // The program will exit if this function returns false

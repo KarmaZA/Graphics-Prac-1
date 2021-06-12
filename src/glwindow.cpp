@@ -202,7 +202,7 @@ void OpenGLWindow::initGL()
     WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
     //perspective
     //Values are interim and probablynot correct
-    projectionMatrix =glm::perspective(60.0f,((float)900/600),1.0f, 100.0f);
+    projectionMatrix =glm::perspective(60.0f,((float)640/480),1.0f, 100.0f);
     
     
 }

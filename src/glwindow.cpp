@@ -6,6 +6,7 @@
 
 #include "glwindow.h"
 #include "geometry.h"
+#include "glm/gtc/matrix_transfrom.hpp"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ const char* glGetErrorString(GLenum error)
     case GL_INVALID_VALUE:
         return "GL_INVALID_VALUE";
     case GL_INVALID_OPERATION:
-        return "GL_INVALID_OPERATION";
+        return "GL_INVALID_OPERATION";s
     case GL_INVALID_FRAMEBUFFER_OPERATION:
         return "GL_INVALID_FRAMEBUFFER_OPERATION";
     case GL_OUT_OF_MEMORY:
@@ -92,10 +93,7 @@ GLuint loadShaderProgram(const char* vertShaderFilename,
     return program;
 }
 
-OpenGLWindow::OpenGLWindow()
-{
-
-}
+OpenGLWindow::OpenGLWindow(){}
 
 
 void OpenGLWindow::initGL()
@@ -173,6 +171,16 @@ void OpenGLWindow::initGL()
     glEnableVertexAttribArray(vertexLoc);
 
     glPrintError("Setup complete", true);
+
+    /*
+    *  Setting up the camera
+    */
+
+    glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,0.0f);
+    glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,-1.0f);
+
+
+
 }
 
 void OpenGLWindow::render()
@@ -183,6 +191,8 @@ void OpenGLWindow::render()
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)
     SDL_GL_SwapWindow(sdlWin);
+
+
 }
 
 // The program will exit if this function returns false
@@ -217,8 +227,7 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         //y axis rotation
             cout << "Rotation Y Axis" << endl;
         }
-    }
-    
+    }    
     return true;
 }
 

@@ -165,9 +165,11 @@ void OpenGLWindow::initGL()
     //                     -0.5f, -0.5f, 0.0f,
     //                      0.5f, -0.5f, 0.0f };
     glGenBuffers(1, &vertexBuffer);
+
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 5613*3*sizeof(float), vertexPositions, GL_STATIC_DRAW); //fixed seg fault still no picture
-    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, false, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, 5613*3*sizeof(float), geometry.vertexData(), GL_STATIC_DRAW); //fixed seg fault still no picture
+    
+    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(vertexLoc);
 
     glPrintError("Setup complete", true);
@@ -175,11 +177,9 @@ void OpenGLWindow::initGL()
 
 void OpenGLWindow::render()
 {
-    //cout << "Here" << endl;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glDrawArrays(GL_TRIANGLES, 0, 3); //Well the problem is here
-    //cout << "here" << endl;
+    glDrawArrays(GL_TRIANGLES, 0, 5136);
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)
     SDL_GL_SwapWindow(sdlWin);

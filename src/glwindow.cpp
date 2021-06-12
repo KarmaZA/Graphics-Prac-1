@@ -166,8 +166,8 @@ void OpenGLWindow::initGL()
     //                      0.5f, -0.5f, 0.0f };
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 9*sizeof(float), vertexPositions, GL_STATIC_DRAW);
-    glVertexAttribPointer(vertexLoc, 36, GL_FLOAT, false, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, 5613*3*sizeof(float), vertexPositions, GL_STATIC_DRAW); //fixed seg fault still no picture
+    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, false, 0, 0);
     glEnableVertexAttribArray(vertexLoc);
 
     glPrintError("Setup complete", true);
@@ -179,7 +179,7 @@ void OpenGLWindow::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glDrawArrays(GL_TRIANGLES, 0, 3); //Well the problem is here
-    cout << "here" << endl;
+    //cout << "here" << endl;
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)
     SDL_GL_SwapWindow(sdlWin);
@@ -197,22 +197,28 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         {
             return false;
         }
+        if(e.key.keysym.sym == SDLK_s){
+        //scale +
+            cout << "Scale increase" << endl;
+        }
+        if(e.key.keysym.sym == SDLK_a){
+        //scale -
+            cout << "Scale decrease" << endl;
+        }
+        if(e.key.keysym.sym == SDLK_z){
+        //z axis rotation
+            cout << "Rotation Z Axis" << endl;
+        }
+        if(e.key.keysym.sym == SDLK_x){
+        //x axis rotation
+            cout << "Rotation X Axis" << endl;
+        }
+        if(e.key.keysym.sym == SDLK_c){
+        //y axis rotation
+            cout << "Rotation Y Axis" << endl;
+        }
     }
-    if(s.type == SDL_KEYDOWN){
-	//scale +
-    }
-    if(a.type == SDL_KEYDOWN){
-	//scale -
-    }
-    if(z.type == SDL_KEYDOWN){
-	//z axis rotation
-    }
-    if(x.type == SDL_KEYDOWN){
-	//x axis rotation
-    }
-    if(c.type == SDL_KEYDOWN){
-	//y axis rotation
-    }
+    
     return true;
 }
 

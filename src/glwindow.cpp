@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <stdio.h>
 
@@ -6,9 +7,26 @@
 
 #include "glwindow.h"
 #include "geometry.h"
-#include "glm/gtc/matrix_transfrom.hpp"
+//#include "glm/gtc/matrix_transfrom.hpp"
+#include <glm/glm/glm.hpp>
+#include <glm/glm/gtc/matrix_transform.hpp>
 
 using namespace std;
+
+//View transform matrix
+glm::mat4 WorldViewToMatrix;
+//projection
+glm::mat4 projectionMatrix;
+//Transform
+glm::mat4 transform;
+//Scale modifier;
+GLint scale = 1;
+//rotation modifier
+GLint rotation = 1;
+//Shift modifier
+GLint shift = 1;
+
+
 
 const char* glGetErrorString(GLenum error)
 {
@@ -21,7 +39,7 @@ const char* glGetErrorString(GLenum error)
     case GL_INVALID_VALUE:
         return "GL_INVALID_VALUE";
     case GL_INVALID_OPERATION:
-        return "GL_INVALID_OPERATION";s
+        return "GL_INVALID_OPERATION";
     case GL_INVALID_FRAMEBUFFER_OPERATION:
         return "GL_INVALID_FRAMEBUFFER_OPERATION";
     case GL_OUT_OF_MEMORY:
@@ -178,14 +196,29 @@ void OpenGLWindow::initGL()
 
     glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,0.0f);
     glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,-1.0f);
-
-
-
+    glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
+    //^Setting up a view position and a view direction for the camera
+    
+    WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
+    //perspective
+    //Values are interim and probablynot correct
+    projectionMatrix =glm::perspective(60.0f,((float)900/600),1.0f, 100.0f);
+    
+    
 }
 
 void OpenGLWindow::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //scale
+
+    //rotation xyz
+
+
+    //normalise
+
+    //bind
 
     glDrawArrays(GL_TRIANGLES, 0, 5136);
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
@@ -209,10 +242,12 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         }
         if(e.key.keysym.sym == SDLK_s){
         //scale +
+            scale = 1.2;
             cout << "Scale increase" << endl;
         }
         if(e.key.keysym.sym == SDLK_a){
         //scale -
+            scale =  0.8;
             cout << "Scale decrease" << endl;
         }
         if(e.key.keysym.sym == SDLK_z){

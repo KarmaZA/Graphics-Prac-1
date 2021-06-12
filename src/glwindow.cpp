@@ -15,8 +15,10 @@ using namespace std;
 
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
-//projection
+//projection, translation and rotation global declaration
 glm::mat4 projectionMatrix;
+glm::mat4 translationsMatrix;
+glm::mat4 rotationMatrix;
 //Transform
 glm::vec4 transform;
 //Scale modifier;
@@ -203,9 +205,9 @@ void OpenGLWindow::initGL()
     WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
     //perspective
     //Values are interim and probablynot correct
-    glm::mat4 translationsMatrix = glm::translate(glm::mat4(),cameraDirection);
-    glm::mat4 rotationMatrix = glm::rotate(glm::mat4(),52.0f,glm::vec3(0.0f,0.0f,0.0f));
-    projectionMatrix =glm::perspective(60.0f,((float)640/480),1.0f, 100.0f);
+    translationsMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f,0.0f,3.0f));//cameraDirection);
+    rotationMatrix = glm::rotate(glm::mat4(),52.0f,glm::vec3(0.0f,0.0f,0.0f));
+    projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 10.0f);
 
     glm::mat4 fullTransformMatrix = projectionMatrix * translationsMatrix * rotationMatrix;
     

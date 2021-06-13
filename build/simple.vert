@@ -1,11 +1,8 @@
 #version 330 core
 
 in vec3 position;
-mat4 fullTransformMatrix;
+uniform mat4 MVP
 void main()
 {
-    vec4 v = vec4(position,1.0f);
-    //fullTransformMatrix = fullTransformMatrix * v;
-    gl_Position = v;
-
+    gl_Position = MVP * vec4(position,1.0f);
 }

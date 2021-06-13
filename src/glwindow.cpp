@@ -167,6 +167,10 @@ void OpenGLWindow::initGL()
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
+    //VAO here for object 2
+    //glGenVertexArrays(2, &vao2);
+    //glBindVertexArray(vao2);
+
     // Note that this path is relative to your working directory
     // when running the program (IE if you run from within build
     // then you need to place these files in build as well)
@@ -193,13 +197,32 @@ void OpenGLWindow::initGL()
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(vertexLoc);
 
+    //**********************************************************
+    //Object2
+    /*
+    GeometryData geometry2;
+    geometry2.loadFromOBJFile("teapot.obj");
+    float *vertexPositions2 = (float*)geometry.vertexData();
+
+    int vertexLoc2 = glGetAttribLocation(shader, "position");
+    
+    
+    glGenBuffers(1, &vertexBuffer);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 1767*3*sizeof(float), geometry.vertexData(), GL_STATIC_DRAW); 
+    
+    glVertexAttribPointer(vertexLoc2, 3, GL_FLOAT, true, 0, 0);
+    glEnableVertexAttribArray(vertexLoc2);
+    */
+    //**********************************************************
     glPrintError("Setup complete", true);
 
     /*
     *  Setting up the camera
     */
 
-    /*glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,0.0f);
+    glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,0.0f);
     glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,-1.0f);
     glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
     //^Setting up a view position and a view direction for the camera
@@ -211,20 +234,19 @@ void OpenGLWindow::initGL()
     translationsMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f,0.0f,-3.0f));//cameraDirection);
     rotationMatrix = glm::rotate(glm::mat4(),52.0f,glm::vec3(0.0f,0.0f,0.0f));
     
-*/
     //glm::mat4 fullTransformMatrix = projectionMatrix * translationsMatrix * rotationMatrix;
     
     //\/ GPU locations of uniform mat4 in simple.frag
     //fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
     //glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &fullTransformMatrix[0][0]);
-    //transform = model
+
 
     //glDrawElements(GL_TRIANGLES,5136,GL_UNSIGNED_SHORT,0);
 }
 
 void OpenGLWindow::render()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clears the screen
 
     //scale
     //glm::scale
@@ -237,6 +259,7 @@ void OpenGLWindow::render()
     //glBindVertexArray(fullTransformMatrixUniformLocation);
 
     glDrawArrays(GL_TRIANGLES, 0, 5136);
+    //glDrawArrays(GL_TRIANGLES, 0, 6903);
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)
     SDL_GL_SwapWindow(sdlWin);

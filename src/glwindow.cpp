@@ -41,6 +41,13 @@ GLfloat transX = 0.0f;
 GLfloat transY = 0.0f;
 GLfloat transZ = -3.0f;
 
+//Colour
+GLfloat r = 1.0f;
+GLfloat g = 1.0f;
+GLfloat b = 1.0f;
+
+int colorLoc;
+
 GLuint programID;
 GLuint vao2;
 
@@ -186,7 +193,7 @@ void OpenGLWindow::initGL()
     shader = loadShaderProgram("simple.vert", "simple.frag");
     glUseProgram(shader);
 
-    int colorLoc = glGetUniformLocation(shader, "objectColor");
+    colorLoc = glGetUniformLocation(shader, "objectColor");
     glUniform3f(colorLoc, 1.0f, 1.0f, 1.0f);
 
     // Load the model that we want to use and buffer the vertex attributes
@@ -272,7 +279,7 @@ void OpenGLWindow::render()
     ModelMatrix = glm::scale(ModelMatrix, glm::vec3(scale, scale, scale));//*scale);
 
     MVP = projectionMatrix * ModelMatrix;
-
+    glUniform3f(colorLoc, r, g, b);
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1, GL_FALSE, &MVP[0][0]);
     //normalise
@@ -285,7 +292,7 @@ void OpenGLWindow::render()
     glBindVertexArray(vao2);
 
     //So they aren't on top of each other;
-    ModelMatrix = glm::translate(ModelMatrix, glm::vec3(transX, transY + 1.5f, transZ));
+    ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.0f, 1.5f, 0.0f));
 
     MVP = projectionMatrix * ModelMatrix;
 
@@ -312,60 +319,108 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         {
             return false;
         }
-        if (e.key.keysym.sym == SDLK_s) {
+        //SCALE
+        if (e.key.keysym.sym == SDLK_g) {
             //scale +,1.0f
             scale *= 1.1f;
             //cout << "Scale increase" << endl;
         }
-        if (e.key.keysym.sym == SDLK_a) {
+        if (e.key.keysym.sym == SDLK_f) {
             //scale -
             scale *= 0.8f;
             //cout << "Scale decrease" << endl;
         }
-        if (e.key.keysym.sym == SDLK_z) {
-            //z axis rotation
-            rotAngleZ += 0.1f;
-            //cout << "Rotation Z Axis" << endl;
-        }
-        if (e.key.keysym.sym == SDLK_x) {
+
+        //ROTATION
+
+        if (e.key.keysym.sym == SDLK_j) {
             //x axis rotation
             rotAngleX += 0.1f;
             //cout << "Rotation X Axis" << endl;
         }
-        if (e.key.keysym.sym == SDLK_c) {
+        if (e.key.keysym.sym == SDLK_k) {
             //y axis rotation
             rotAngleY += 0.1f;
             //cout << "Rotation Y Axis" << endl;
         }
-        if (e.key.keysym.sym == SDLK_q) {
-            //scale -
+        if (e.key.keysym.sym == SDLK_l) {
+            //z axis rotation
+            rotAngleZ += 0.1f;
+            //cout << "Rotation Z Axis" << endl;
+        }
+
+        if (e.key.keysym.sym == SDLK_u) {
+            //x axis rotation
+            rotAngleX -= 0.1f;
+            //cout << "Rotation X Axis" << endl;
+        }
+        if (e.key.keysym.sym == SDLK_i) {
+            //y axis rotation
+            rotAngleY -= 0.1f;
+            //cout << "Rotation Y Axis" << endl;
+        }
+        if (e.key.keysym.sym == SDLK_o) {
+            //z axis rotation
+            rotAngleZ -= 0.1f;
+            //cout << "Rotation Z Axis" << endl;
+        }
+
+        //TRANSLATION
+        if (e.key.keysym.sym == SDLK_a) {
+            //X axis translation
             transX -= 0.1f;
             //cout << "Negative Shift X Axis" << endl;
         }
-        if (e.key.keysym.sym == SDLK_w) {
-            //z axis rotation
+        if (e.key.keysym.sym == SDLK_d) {
+            //X axis translation
             transX += 0.1f;
             //cout << "Positive Shift X Axis" << endl;
         }
-        if (e.key.keysym.sym == SDLK_e) {
-            //x axis rotation
+        if (e.key.keysym.sym == SDLK_s) {
+            //Y axis translation
             transY -= 0.1f;
             //cout << "Negative Shift Y Axis" << endl;
         }
-        if (e.key.keysym.sym == SDLK_r) {
-            //y axis rotation
+        if (e.key.keysym.sym == SDLK_w) {
+            //y axis translation
             transY += 0.1f;
             //cout << "Positive Shift Y Axis" << endl;
         }
-        if (e.key.keysym.sym == SDLK_t) {
-            //x axis rotation
+        if (e.key.keysym.sym == SDLK_q) {
+            //x axis translation
             transZ -= 0.1f;
             //cout << "Negative Shift Z Axis" << endl;
         }
-        if (e.key.keysym.sym == SDLK_y) {
-            //y axis rotation
+        if (e.key.keysym.sym == SDLK_e) {
+            //y axis translation
             transZ += 0.1f;
             //cout << "Positive Shift Z Axis" << endl;
+        }
+
+        //COLOUR CHANGING
+        if (e.key.keysym.sym == SDLK_b) {
+            //Red Colour Change
+            r -= 0.1f;
+        }
+        if (e.key.keysym.sym == SDLK_n) {
+            //Green Colour
+            g -= 0.1f;
+        }
+        if (e.key.keysym.sym == SDLK_m) {
+            //BlueColour
+            b -= 0.1f;
+        }
+        if (e.key.keysym.sym == SDLK_z) {
+            //Red Colour Change
+            r += 0.1f;
+        }
+        if (e.key.keysym.sym == SDLK_x) {
+            //Green Colour
+            g += 0.1f;
+        }
+        if (e.key.keysym.sym == SDLK_c) {
+            //BlueColour
+            b += 0.1f;
         }
     }
     return true;
@@ -375,6 +430,7 @@ void OpenGLWindow::cleanup()
 {
     glDeleteBuffers(1, &vertexBuffer);
     glDeleteVertexArrays(1, &vao);
+    glDeleteVertexArrays(1, &vao2);
     SDL_DestroyWindow(sdlWin);
 }
 

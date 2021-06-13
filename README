@@ -1,4 +1,4 @@
-OpenGL Practical Framework
+OpenGL Practical Framework 
 ==========================
 
 This is a basic framework which you can use as a starting point for your practical.
@@ -16,3 +16,48 @@ Note that you will need to have Visual Studio installed and be running from its 
 
 When running on Windows, you will need to have `SDL2.dll` and `glew32.dll` included in the same directory as your executable.
 For linux you simply need the `libsdl2-dev` and `libglew-dev` package installed.
+
+EVRJON003 README
+
+This is the README file for Graphics Assignment 1.
+
+The assignment has and compiles off the make file and so can be compiled with "make" and run with "make run".
+
+This program compiles and runs on the honours labs computers and the include statements may have to be changed if compiled on a different fiels structure.
+
+The .obj files that are loaded are included in the build folder and must be in that folder to be loaded into the program.
+
+The program itself supports a number of transformations:
+Rotation:
+X axis increase: 'j'
+Y axis increase: 'k'
+Z axis increase: 'l'
+        X axis decrease: 'u'
+Y axis decrease: 'i'
+Z axis decrease: 'o'
+
+Scale:
+Increase: 'g'
+Decrease: 'f'
+Transforms
+X positive: 'd'
+X negative: 'a'
+Y positive: 'e'
+Y negative: 'r'
+Z positive: 't'
+z negative: 'y'
+
+Colour:
+Red increase:   'z'
+Green increase: 'x'
+Blue increase:  'c'
+        Red decrease:   'b'
+Green decrease: 'n'
+Blue decrease:  'm'
+
+Movement are WASDQE with QE being the Z axis. 
+Rotation is UIOJKL in xyz syntax.
+Scale changes with G to grow and F to shrink(freeze and shrink).
+ZXC increase the rgb values and BNM reduces them. 
+
+You have to reduce the colour values before you can increase them.

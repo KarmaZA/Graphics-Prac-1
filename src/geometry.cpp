@@ -162,6 +162,8 @@ void GeometryData::loadFromOBJFile(string filename)
                     {
                         inStream.unget(); // This is just to prevent us from consuming a newline
                     }
+                }else{
+                    inStream.unget();
                 }
                 
                 // NOTE: We subtract 1 here because the OBJ format uses 1-based indices

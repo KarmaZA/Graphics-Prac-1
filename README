@@ -1,5 +1,5 @@
-OpenGL Practical Framework 
-==========================
+OpenGL Practical Framework
+================================================================
 
 This is a basic framework which you can use as a starting point for your practical.
 It uses the SDL library to create a window with an OpenGL context and contains sample code which will create a window and draw a triangle.
@@ -8,7 +8,7 @@ Included in this framework is a set of sample models and a sample pair of textur
 Note that while the OBJ loader should in theory support most OBJ files, it has not been tested much in the wild and may have some trouble with more complicated models (more detail in geometry.cpp).
 
 Usage Instructions:
-===================
+================================================================
 Two makefiles are provided, one for linux (which works on the lab PCs) and one for Windows.
 To use the linux makefile (./Makefile) just run 'make' to compile and 'make run' to run.
 To use the Windows makefile (./Makefile_win), run 'make -f Makefile_win' to compile, and 'make -f Makefile_win run' to run.
@@ -17,47 +17,60 @@ Note that you will need to have Visual Studio installed and be running from its 
 When running on Windows, you will need to have `SDL2.dll` and `glew32.dll` included in the same directory as your executable.
 For linux you simply need the `libsdl2-dev` and `libglew-dev` package installed.
 
+================================================================
 EVRJON003 README
-
+================================================================
 This is the README file for Graphics Assignment 1.
 
 The assignment has and compiles off the make file and so can be compiled with "make" and run with "make run".
 
-This program compiles and runs on the honours labs computers and the include statements may have to be changed if compiled on a different fiels structure.
+This program compiles and runs on the honours labs computers and the include statements may have to be changed if compiled on a different file structure.
 
 The .obj files that are loaded are included in the build folder and must be in that folder to be loaded into the program.
 
 The program itself supports a number of transformations:
-Rotation:
-X axis increase: 'j'
-Y axis increase: 'k'
-Z axis increase: 'l'
+
+    Load in mode 2:
+        load in model: 't'
+
+	Rotation:
+		X axis increase: 'j'
+		Y axis increase: 'k'
+		Z axis increase: 'l'
         X axis decrease: 'u'
-Y axis decrease: 'i'
-Z axis decrease: 'o'
+		Y axis decrease: 'i'
+		Z axis decrease: 'o'
 
-Scale:
-Increase: 'g'
-Decrease: 'f'
-Transforms
-X positive: 'd'
-X negative: 'a'
-Y positive: 'e'
-Y negative: 'r'
-Z positive: 't'
-z negative: 'y'
+	Scale:
+		Increase: 'g'
+		Decrease: 'f'
+	
+	Transforms
+		X positive: 'd'
+		X negative: 'a'
+		Y positive: 'e'
+		Y negative: 'r'
+		Z positive: 't'
+		z negative: 'y'
 
-Colour:
-Red increase:   'z'
-Green increase: 'x'
-Blue increase:  'c'
+	Colour:
+		Red increase:   'z'
+		Green increase: 'x'
+		Blue increase:  'c'
         Red decrease:   'b'
-Green decrease: 'n'
-Blue decrease:  'm'
+		Green decrease: 'n'
+		Blue decrease:  'm'
 
+================================================================
+
+Press T to start tracking the 2nd model
+T can also be used to reset the position of the two models.
 Movement are WASDQE with QE being the Z axis. 
-Rotation is UIOJKL in xyz syntax.
+Rotation is UIO JKL in xyz syntax.
 Scale changes with G to grow and F to shrink(freeze and shrink).
 ZXC increase the rgb values and BNM reduces them. 
 
 You have to reduce the colour values before you can increase them.
+
+================================================================
+================================================================

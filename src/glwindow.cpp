@@ -6,10 +6,11 @@
 
 #include "glwindow.h"
 #include "geometry.h"
-//#include "glm/gtc/matrix_transfrom.hpp"
+/* When working on my laptop uncomment top 2*/
 //#include <glm/glm/glm.hpp>
-#include <glm/glm.hpp>
 //#include <glm/glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
@@ -21,17 +22,14 @@ glm::mat4 projectionMatrix;
 glm::mat4 VP;
 //Model
 glm::mat4 ModelMatrix;
-
+//Matrix in simple.vert uniform location
 GLint fullTransformMatrixUniformLocation;
-//Transform
-glm::vec4 transform;
+//MVP declaration
 glm::mat4 MVP;
 //Scale modifier;
 GLfloat scale = 0.3f;
-//rotation modifier
-glm::vec3 rotation = glm::vec3(0.0f,0.0f,0.0f);
 
-//Rotation Angle
+//Rotation Angles
 GLfloat rotAngleX = 0.0f;
 GLfloat rotAngleY = 0.0f;
 GLfloat rotAngleZ = 0.0f;
@@ -40,19 +38,20 @@ GLfloat transX = 0.0f;
 GLfloat transY = 0.0f;
 GLfloat transZ = -3.0f;
 
-//Colour
+//Colour values
 GLfloat r = 1.0f;
 GLfloat g = 1.0f;
 GLfloat b = 1.0f;
 
+//Loading Model 2
 bool drawModel2 =false;
 
+//Global declaration to access across methods
 int colorLoc;
-
 GLuint programID;
 GLuint vao2;
 
-//Vertex Count for the object
+//Vertex Count for the object global declaration
 GLuint object1Vert;
 GLuint object2Vert;
 

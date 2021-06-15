@@ -14,7 +14,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
-
+//Camera Declarations
+glm::vec3 cameraPos;
+glm::vec3 cameraDirection;
+glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
 //projection, translation and rotation global declaration
@@ -43,6 +46,10 @@ GLfloat r = 1.0f;
 GLfloat g = 1.0f;
 GLfloat b = 1.0f;
 
+//Camera Orbit variables
+GLfloat orbitX = 0;
+GLfloat orbitY = -1;
+GLfloat orbitSide = 1;
 //Loading Model 2
 bool drawModel2 =false;
 
@@ -237,9 +244,8 @@ void OpenGLWindow::initGL()
     /*
     *  Setting up the camera
     */
-    glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,0.0f);
-    glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,-1.0f);
-    glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
+    cameraPos = glm::vec3(0.0f,0.0f,0.0f);
+    cameraDirection = glm::vec3(0.0f,0.0f,-1.0f);
     //^Setting up a view position and a view direction for the camera
     
     WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
@@ -293,6 +299,20 @@ void OpenGLWindow::render()
     }
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)
+
+    /*
+        Assignment 2 Camera Rotation
+    */
+    orbitX += 0.1f;
+    orbitY = (orbitSide*(orbitX*orbitX)) -1;
+    if (orbitY == 0){
+        orbitSide *= -1;
+    } 
+    cameraPos = glm::vec3(orbitX,orbitY,0.0f);
+    WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
+
+
+
     SDL_GL_SwapWindow(sdlWin);
 }
 

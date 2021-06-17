@@ -7,11 +7,10 @@
 #include "glwindow.h"
 #include "geometry.h"
 /* When working on my laptop uncomment top 2*/
-//#include <glm/glm/glm.hpp>
-//#include <glm/glm/gtc/matrix_transform.hpp>
-#include <glm/glm.hpp>
-
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm/glm.hpp>
+#include <glm/glm/gtc/matrix_transform.hpp>
+//#include <glm/glm.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
 //Camera Declarations
@@ -47,9 +46,8 @@ GLfloat g = 1.0f;
 GLfloat b = 1.0f;
 
 //Camera Orbit variables
-GLfloat orbitX = 0;
-GLfloat orbitY = -1;
-GLfloat orbitSide = 1;
+GLfloat countOrbit = 1;
+float radius = 10.0f;
 //Loading Model 2
 bool drawModel2 =false;
 
@@ -244,19 +242,31 @@ void OpenGLWindow::initGL()
     /*
     *  Setting up the camera
     */
-    cameraPos = glm::vec3(0.0f,0.0f,0.0f);
-    cameraDirection = glm::vec3(0.0f,0.0f,-1.0f);
+    cameraPos = glm::vec3(3.0f,0.0f,0.0f);
+    cameraDirection = glm::vec3(0.0f,0.0f,0.0f);
     //^Setting up a view position and a view direction for the camera
     
     WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
     //perspective
-    projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 10.0f);
+    projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 100.0f);
     VP=WorldViewToMatrix*projectionMatrix;
 }
 
 void OpenGLWindow::render()
-{
+{   
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clears the screen
+
+    /*
+        Assignment 2 Camera Rotation
+    */
+    
+    cameraPos.x  = sin(countOrbit) * radius;
+    cameraPos.z = cos(countOrbit) * radius;
+    WorldViewToMatrix = glm::lookAt(cameraPos,cameraDirection,UP);
+    countOrbit += 0.1f;
+    //cout << camX << "   " << camZ << endl;
+    //VP=WorldViewToMatrix*projectionMatrix;
+
     ModelMatrix= glm::mat4(1.0f);
     //Transform change
     ModelMatrix = glm::translate(ModelMatrix, glm::vec3(transX,transY,transZ));//cameraDirection);
@@ -278,8 +288,8 @@ void OpenGLWindow::render()
     //Uniform location of mat4 in simple.vert
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
-    //normalise
 
+    
     //bind
     glBindVertexArray(vao);
 
@@ -300,19 +310,7 @@ void OpenGLWindow::render()
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)
 
-    /*
-        Assignment 2 Camera Rotation
-    */
-    orbitX += 0.1f;
-    orbitY = (orbitSide*(orbitX*orbitX)) -1;
-    if (orbitY == 0){
-        orbitSide *= -1;
-    } 
-    cameraPos = glm::vec3(orbitX,orbitY,0.0f);
-    WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
-
-
-
+   
     SDL_GL_SwapWindow(sdlWin);
 }
 

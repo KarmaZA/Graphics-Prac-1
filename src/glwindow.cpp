@@ -258,12 +258,16 @@ void OpenGLWindow::render()
 
     /*
         Assignment 2 Camera Rotation
-    */
-    
+    */   
     cameraPos.x  = sin(countOrbit) * radius;
     cameraPos.z = cos(countOrbit) * radius;
+    cameraPos *= 0.3f;
     WorldViewToMatrix = glm::lookAt(cameraPos,cameraDirection,UP);
-    countOrbit += 0.1f;
+
+    WorldViewToMatrix = glm::rotate(WorldViewToMatrix,glm::radians(rotAngleX),glm::vec3(1.0f,0.0f,0.0f));   
+    WorldViewToMatrix = glm::rotate(WorldViewToMatrix,glm::radians(rotAngleY),glm::vec3(0.0f,1.0f,0.0f));
+    WorldViewToMatrix = glm::rotate(WorldViewToMatrix,glm::radians(rotAngleZ),glm::vec3(0.0f,0.0f,1.0f));
+    VP=projectionMatrix*WorldViewToMatrix;
     //cout << camX << "   " << camZ << endl;
     //VP=WorldViewToMatrix*projectionMatrix;
 
@@ -271,16 +275,16 @@ void OpenGLWindow::render()
     //Transform change
     ModelMatrix = glm::translate(ModelMatrix, glm::vec3(transX,transY,transZ));//cameraDirection);
     //Rotation Changes
-    ModelMatrix = glm::rotate(ModelMatrix,rotAngleX,glm::vec3(1.0f,0.0f,0.0f));
+    //ModelMatrix = glm::rotate(ModelMatrix,rotAngleX,glm::vec3(1.0f,0.0f,0.0f));
     
-    ModelMatrix = glm::rotate(ModelMatrix,rotAngleY,glm::vec3(0.0f,1.0f,0.0f));
+    //ModelMatrix = glm::rotate(ModelMatrix,rotAngleY,glm::vec3(0.0f,1.0f,0.0f));
 
-    ModelMatrix = glm::rotate(ModelMatrix,rotAngleZ,glm::vec3(0.0f,0.0f,1.0f));
+    //ModelMatrix = glm::rotate(ModelMatrix,rotAngleZ,glm::vec3(0.0f,0.0f,1.0f));
     //Scale Change
     ModelMatrix = glm::scale(ModelMatrix,glm::vec3(scale,scale,scale));//*scale);
 
     //Create the MVP
-    MVP = projectionMatrix * ModelMatrix;
+    MVP = VP * ModelMatrix;
 
     //Colour change
     glUniform3f(colorLoc, r, g, b);
@@ -308,9 +312,7 @@ void OpenGLWindow::render()
         glDrawArrays(GL_TRIANGLES, 0, object2Vert);
     }
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
-    // onto the screen (whereas previously it only existed in memory)
-
-   
+    // onto the screen (whereas previously it only existed in memory)   
     SDL_GL_SwapWindow(sdlWin);
 }
 
@@ -363,38 +365,39 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         //ROTATION      
         if(e.key.keysym.sym == SDLK_j){
         //x axis rotation
-            rotAngleX += 0.1f;
+            rotAngleX += 1.0f;
             //cout << "Rotation X Axis" << endl;
         }
         if(e.key.keysym.sym == SDLK_k){
         //y axis rotation
-            rotAngleY += 0.1f;
+            rotAngleY += 1.0f;
             //cout << "Rotation Y Axis" << endl;
         }
         if(e.key.keysym.sym == SDLK_l){
         //z axis rotation
-            rotAngleZ += 0.1f;
+            rotAngleZ += 1.0f;
             //cout << "Rotation Z Axis" << endl;
         }
        
         if(e.key.keysym.sym == SDLK_u){
         //x axis rotation
-            rotAngleX -= 0.1f;
+            rotAngleX -= 1.0f;
             //cout << "Rotation X Axis" << endl;
         }
         if(e.key.keysym.sym == SDLK_i){
         //y axis rotation
-            rotAngleY -= 0.1f;
+            rotAngleY -= 1.0f;
             //cout << "Rotation Y Axis" << endl;
         }
         if(e.key.keysym.sym == SDLK_o){
         //z axis rotation
-            rotAngleZ -= 0.1f;
+            rotAngleZ -= 1.0f;
             //cout << "Rotation Z Axis" << endl;
         }
 
         //TRANSLATION
         if(e.key.keysym.sym == SDLK_a){
+            //countOrbit += 0.1f;
         //X axis translation
             transX -= 0.1f;
             //cout << "Negative Shift X Axis" << endl;

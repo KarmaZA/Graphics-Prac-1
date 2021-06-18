@@ -243,7 +243,7 @@ void OpenGLWindow::initGL()
     // Load the model that we want to use and buffer the vertex attributes
     //GeometryData geometry = loadOBJFile("tri.obj");
     GeometryData geometry;
-    geometry.loadFromOBJFile("doggo.obj");
+    geometry.loadFromOBJFile("suzanne.obj");
     float *vertexPositions = (float*)geometry.vertexData();
     object1Vert = geometry.vertexCount();
     int vertexLoc = glGetAttribLocation(shader, "position");
@@ -256,26 +256,7 @@ void OpenGLWindow::initGL()
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(vertexLoc);
     glPrintError("Setup completer for object 1", true);
-    //**********************************************************
-    //Object2
-    //VAO here for object 2
-    glGenVertexArrays(1, &vao2);
-    glBindVertexArray(vao2);
 
-    GeometryData geometry2;
-    geometry2.loadFromOBJFile("teapot.obj");
-    float *vertexPositions2 = (float*)geometry2.vertexData();
-    int vertexLoc2 = glGetAttribLocation(shader, "position");
-    object2Vert = geometry2.vertexCount();
-    
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, object2Vert*3*sizeof(float), geometry2.vertexData(), GL_STATIC_DRAW); 
-    
-    glVertexAttribPointer(vertexLoc2, 3, GL_FLOAT, true, 0, 0);
-    glEnableVertexAttribArray(vertexLoc2);
-    glPrintError("Setup complete for object 2", true);
-    //**********************************************************/
     /*
     *  Setting up the camera
     */
@@ -311,43 +292,18 @@ void OpenGLWindow::render()
     ModelMatrix= glm::mat4(1.0f);
     //Transform change
     ModelMatrix = glm::translate(ModelMatrix, glm::vec3(transX,transY,transZ));//cameraDirection);
-    //Rotation Changes
-    //ModelMatrix = glm::rotate(ModelMatrix,rotAngleX,glm::vec3(1.0f,0.0f,0.0f));
-    
-    //ModelMatrix = glm::rotate(ModelMatrix,rotAngleY,glm::vec3(0.0f,1.0f,0.0f));
-
-    //ModelMatrix = glm::rotate(ModelMatrix,rotAngleZ,glm::vec3(0.0f,0.0f,1.0f));
-    //Scale Change
-    ModelMatrix = glm::scale(ModelMatrix,glm::vec3(scale,scale,scale));//*scale);
 
     //Create the MVP
     MVP = VP * ModelMatrix;
 
-    //Colour change
-    glUniform3f(colorLoc, r, g, b);
-
     //Uniform location of mat4 in simple.vert
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
-
     
     //bind
     glBindVertexArray(vao);
 
     glDrawArrays(GL_TRIANGLES, 0, object1Vert);
-    if(drawModel2){
-        glBindVertexArray(vao2);
-
-        //So they aren't on top of each other;
-        ModelMatrix=glm::translate(ModelMatrix,glm::vec3(0.0f,1.5f,0.0f));
-
-        MVP = projectionMatrix * ModelMatrix;
-
-        fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
-        glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
-
-        glDrawArrays(GL_TRIANGLES, 0, object2Vert);
-    }
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)   
     SDL_GL_SwapWindow(sdlWin);
@@ -385,18 +341,6 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
             g = 1.0f;
             b = 1.0f;
             //cout << "Scale increase" << endl;
-        }
-
-        //SCALE
-        if(e.key.keysym.sym == SDLK_g){
-        //scale +,1.0f
-            scale *= 1.1f;
-            //cout << "Scale increase" << endl;
-        }
-        if(e.key.keysym.sym == SDLK_f){
-        //scale -
-            scale *=  0.8f;
-            //cout << "Scale decrease" << endl;
         }
 
         //ROTATION      
@@ -463,32 +407,6 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         //y axis translation
             transZ += 0.1f;
             //cout << "Positive Shift Z Axis" << endl;
-        }
-
-        //COLOUR CHANGING
-        if(e.key.keysym.sym == SDLK_b){
-        //Red Colour Change
-            r -= 0.1f;
-        }
-        if(e.key.keysym.sym == SDLK_n){
-        //Green Colour
-            g -= 0.1f;
-        }
-        if(e.key.keysym.sym == SDLK_m){
-        //BlueColour
-            b -= 0.1f;
-        }
-        if(e.key.keysym.sym == SDLK_z){
-        //Red Colour Change
-            r += 0.1f;
-        }
-        if(e.key.keysym.sym == SDLK_x){
-        //Green Colour
-            g += 0.1f;
-        }
-        if(e.key.keysym.sym == SDLK_c){
-        //BlueColour
-            b += 0.1f;
         }
     }    
     return true;

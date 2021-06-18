@@ -49,7 +49,7 @@ void main()
 using namespace std;
 //Camera Declarations
 glm::vec3 cameraPos;
-glm::vec3 cameraDirection;
+glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,0.0f);
 glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
@@ -62,8 +62,6 @@ glm::mat4 ModelMatrix;
 GLint fullTransformMatrixUniformLocation;
 //MVP declaration
 glm::mat4 MVP;
-//Scale modifier;
-GLfloat scale = 0.3f;
 
 //Rotation Angles
 GLfloat rotAngleX = 0.0f;
@@ -72,12 +70,8 @@ GLfloat rotAngleZ = 0.0f;
 //Transform values
 GLfloat transX = 0.0f;
 GLfloat transY = 0.0f;
-GLfloat transZ = -3.0f;
+GLfloat transZ = 0.0f;
 
-//Colour values
-GLfloat r = 1.0f;
-GLfloat g = 1.0f;
-GLfloat b = 1.0f;
 
 //Camera Orbit variables
 GLfloat countOrbit = 1;
@@ -88,7 +82,6 @@ bool drawModel2 =false;
 //Global declaration to access across methods
 int colorLoc;
 GLuint programID;
-GLuint vao2;
 
 //Vertex Count for the object global declaration
 GLuint object1Vert;
@@ -255,13 +248,12 @@ void OpenGLWindow::initGL()
 
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(vertexLoc);
-    glPrintError("Setup completer for object 1", true);
+    glPrintError("Setup completed for object 1", true);
 
     /*
     *  Setting up the camera
     */
-    cameraPos = glm::vec3(3.0f,0.0f,0.0f);
-    cameraDirection = glm::vec3(0.0f,0.0f,0.0f);
+    cameraPos = glm::vec3(3.0f,0.0f,5.0f);
     //^Setting up a view position and a view direction for the camera
     
     WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
@@ -279,7 +271,7 @@ void OpenGLWindow::render()
     */   
     cameraPos.x  = sin(countOrbit) * radius;
     cameraPos.z = cos(countOrbit) * radius;
-    cameraPos *= 0.3f;
+    cameraPos *= 0.5f;
     WorldViewToMatrix = glm::lookAt(cameraPos,cameraDirection,UP);
 
     WorldViewToMatrix = glm::rotate(WorldViewToMatrix,glm::radians(rotAngleX),glm::vec3(1.0f,0.0f,0.0f));   
@@ -325,8 +317,8 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         //DRAW MODEL 2
         if(e.key.keysym.sym == SDLK_t){
         //scale +,1.0f
-            drawModel2 =true;
-            scale = 0.3f;
+
+
             //Rotation Angle
             rotAngleX = 0.0f;
             rotAngleY = 0.0f;
@@ -336,10 +328,6 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
             transY = 0.0f;
             transZ = -3.0f;
 
-            //Colour
-            r = 1.0f;
-            g = 1.0f;
-            b = 1.0f;
             //cout << "Scale increase" << endl;
         }
 
@@ -416,6 +404,5 @@ void OpenGLWindow::cleanup()
 {
     glDeleteBuffers(1, &vertexBuffer);
     glDeleteVertexArrays(1, &vao);
-    glDeleteVertexArrays(1, &vao2);
     SDL_DestroyWindow(sdlWin);
 }

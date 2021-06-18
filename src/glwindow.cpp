@@ -31,10 +31,7 @@ simple.vert
 
 #version 330 core
 
-layout(location = 0)
-    in vec3 vertPos;
-layout(location = 1)
-    in vec2 vertUV
+
 out vec2 UV;
 uniform mat4 MVP;
 
@@ -86,9 +83,6 @@ GLuint programID;
 //Vertex Count for the object global declaration
 GLuint object1Vert;
 GLuint object2Vert;
-
-//Lighting variables
-float ambientStrength = 0.1f;
 
 
 const char* glGetErrorString(GLenum error)
@@ -291,7 +285,13 @@ void OpenGLWindow::render()
     //Uniform location of mat4 in simple.vert
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
-    
+
+    /**Ambient lighting code*/
+        GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
+        glm::vec3 ambientLight(0.2f,0.1f,0.7f);
+        glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
+
+    /*********************************************/
     //bind
     glBindVertexArray(vao);
 
@@ -317,8 +317,6 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
         //DRAW MODEL 2
         if(e.key.keysym.sym == SDLK_t){
         //scale +,1.0f
-
-
             //Rotation Angle
             rotAngleX = 0.0f;
             rotAngleY = 0.0f;
@@ -326,9 +324,7 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
             //Transform values
             transX = 0.0f;
             transY = 0.0f;
-            transZ = -3.0f;
-
-            //cout << "Scale increase" << endl;
+            transZ = 0.0f;
         }
 
         //ROTATION      

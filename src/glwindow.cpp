@@ -11,7 +11,41 @@
 #include <glm/glm/gtc/matrix_transform.hpp>
 //#include <glm/glm.hpp>
 //#include <glm/gtc/matrix_transform.hpp>
+/*
+    simple.frag
 
+    #version 330 core
+
+in vec2 UV;
+out vec4 outColor;
+uniformt sampler2D myTexture;
+
+uniform vec3 objectColor;
+
+void main()
+{
+    outColor = vec4(texture(myTexture,UV).rgb,1);
+}
+
+simple.vert
+
+#version 330 core
+
+layout(location = 0)
+    in vec3 vertPos;
+layout(location = 1)
+    in vec2 vertUV
+out vec2 UV;
+uniform mat4 MVP;
+
+void main()
+{
+    gl_Position = MVP * vec4(vertPos,1.0f);
+    UV = vertUV;
+
+}
+
+*/
 using namespace std;
 //Camera Declarations
 glm::vec3 cameraPos;
@@ -59,6 +93,9 @@ GLuint vao2;
 //Vertex Count for the object global declaration
 GLuint object1Vert;
 GLuint object2Vert;
+
+//Lighting variables
+float ambientStrength = 0.1f;
 
 
 const char* glGetErrorString(GLenum error)

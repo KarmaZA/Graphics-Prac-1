@@ -79,6 +79,7 @@ bool drawModel2 =false;
 //Global declaration to access across methods
 int colorLoc;
 GLuint programID;
+GLuint vao2;
 
 //Vertex Count for the object global declaration
 GLuint object1Vert;
@@ -254,6 +255,27 @@ void OpenGLWindow::initGL()
     //perspective
     projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 100.0f);
     VP=WorldViewToMatrix*projectionMatrix;
+
+    //**********************************************************
+    //Object2
+    //VAO here for object 2
+    glGenVertexArrays(1, &vao2);
+    glBindVertexArray(vao2);
+
+    GeometryData geometry2;
+    geometry2.loadFromOBJFile("teapot.obj");
+    float *vertexPositions2 = (float*)geometry2.vertexData();
+    int vertexLoc2 = glGetAttribLocation(shader, "position");
+    object2Vert = geometry2.vertexCount();
+
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, object2Vert*3*sizeof(float), geometry2.vertexData(), GL_STATIC_DRAW); 
+
+    glVertexAttribPointer(vertexLoc2, 3, GL_FLOAT, true, 0, 0);
+    glEnableVertexAttribArray(vertexLoc2);
+    glPrintError("Setup complete for object 2", true);
+    //**********************************************************/
 }
 
 void OpenGLWindow::render()
@@ -296,6 +318,20 @@ void OpenGLWindow::render()
     /*********************************************/
     //bind
     glBindVertexArray(vao);
+
+    /*****************Drawing light source 1***************************/
+     glBindVertexArray(vao2);
+
+    //So they aren't on top of each other;
+    ModelMatrix=glm::translate(ModelMatrix,glm::vec3(0.0f,1.5f,0.0f));
+
+    MVP = projectionMatrix * ModelMatrix;
+
+    fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
+    glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
+
+    glDrawArrays(GL_TRIANGLES, 0, object2Vert);
+    /****************************************************************/
 
     glDrawArrays(GL_TRIANGLES, 0, object1Vert);
     // Swap the front and back buffers on the window, effectively putting what we just "drew"

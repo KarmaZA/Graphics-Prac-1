@@ -258,6 +258,8 @@ void OpenGLWindow::initGL()
 
 void OpenGLWindow::render()
 {   
+    //clear color included by me
+    glClearColor(0.1f,0.1f,0.1f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clears the screen
 
     /*
@@ -287,9 +289,9 @@ void OpenGLWindow::render()
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
 
     /**Ambient lighting code*/
-        GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
-        glm::vec3 ambientLight(0.2f,0.1f,0.7f);
-        glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
+    GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLightColor");
+    glm::vec3 ambientLightColor(0.5f,1.0f,1.0f);
+    glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
 
     /*********************************************/
     //bind

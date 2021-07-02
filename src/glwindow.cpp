@@ -215,7 +215,7 @@ void OpenGLWindow::initGL()
     glCullFace(GL_BACK);
     glClearColor(0,0,0,1);
 
-    //VAO here for object 1 - Doggo
+    //VAO here for object 1 - Suzanne
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -245,6 +245,29 @@ void OpenGLWindow::initGL()
     glEnableVertexAttribArray(vertexLoc);
     glPrintError("Setup completed for object 1", true);
 
+    
+
+    //**********************************************************
+    //Object2
+    //VAO here for object 2
+    glGenVertexArrays(1, &vao2);
+    glBindVertexArray(vao2);
+
+    GeometryData geometry2;
+    geometry2.loadFromOBJFile("cube.obj");
+    float *vertexPositions2 = (float*)geometry2.vertexData();
+    int vertexLoc2 = glGetAttribLocation(shader, "position");
+    object2Vert = geometry2.vertexCount();
+    
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, object2Vert*3*sizeof(float), geometry2.vertexData(), GL_STATIC_DRAW); 
+    
+    glVertexAttribPointer(vertexLoc2, 3, GL_FLOAT, true, 0, 0);
+    glEnableVertexAttribArray(vertexLoc2);
+    glPrintError("Setup complete for object 2", true);
+    //**********************************************************/
+
     /*
     *  Setting up the camera
     */
@@ -256,40 +279,19 @@ void OpenGLWindow::initGL()
     projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 100.0f);
     VP=WorldViewToMatrix*projectionMatrix;
 
-    //**********************************************************
-    //Object2
-    //VAO here for object 2
-    glGenVertexArrays(1, &vao2);
-    glBindVertexArray(vao2);
-
-    GeometryData geometry2;
-    geometry2.loadFromOBJFile("teapot.obj");
-    float *vertexPositions2 = (float*)geometry2.vertexData();
-    int vertexLoc2 = glGetAttribLocation(shader, "position");
-    object2Vert = geometry2.vertexCount();
-
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, object2Vert*3*sizeof(float), geometry2.vertexData(), GL_STATIC_DRAW); 
-
-    glVertexAttribPointer(vertexLoc2, 3, GL_FLOAT, true, 0, 0);
-    glEnableVertexAttribArray(vertexLoc2);
-    glPrintError("Setup complete for object 2", true);
-    //**********************************************************/
 }
 
 void OpenGLWindow::render()
 {   
     //clear color included by me
-    glClearColor(0.1f,0.1f,0.1f,1.0f);
+    //glClearColor(0.1f,0.1f,0.1f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clears the screen
+    
 
-    /*
-        Assignment 2 Camera Rotation
-    */   
+    /************Assignment 2 Camera Rotation************/   
     cameraPos.x  = sin(countOrbit) * radius;
     cameraPos.z = cos(countOrbit) * radius;
-    cameraPos *= 0.5f;
+    cameraPos *= 0.7f;
     WorldViewToMatrix = glm::lookAt(cameraPos,cameraDirection,UP);
 
     WorldViewToMatrix = glm::rotate(WorldViewToMatrix,glm::radians(rotAngleX),glm::vec3(1.0f,0.0f,0.0f));   
@@ -298,42 +300,43 @@ void OpenGLWindow::render()
     VP=projectionMatrix*WorldViewToMatrix;
     //cout << camX << "   " << camZ << endl;
     //VP=WorldViewToMatrix*projectionMatrix;
-
-    ModelMatrix= glm::mat4(1.0f);
-    //Transform change
-    ModelMatrix = glm::translate(ModelMatrix, glm::vec3(transX,transY,transZ));//cameraDirection);
-
-    //Create the MVP
-    MVP = VP * ModelMatrix;
-
-    //Uniform location of mat4 in simple.vert
-    fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
-    glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
-
+    
     /**Ambient lighting code*/
     GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLightColor");
     glm::vec3 ambientLightColor(0.5f,1.0f,1.0f);
     glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
 
     /*********************************************/
+    ModelMatrix= glm::mat4(1.0f);
+    //Transform change
+    ModelMatrix = glm::translate(ModelMatrix, glm::vec3(transX,transY,transZ));//cameraDirection);
+
+    //Create the MVP
+    MVP = VP * ModelMatrix;
+    
+    //Uniform location of mat4 in simple.vert
+    fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
+    glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
+    
     //bind
     glBindVertexArray(vao);
+    glDrawArrays(GL_TRIANGLES, 0, object1Vert);
 
-    /*****************Drawing light source 1***************************/
-     glBindVertexArray(vao2);
-
+    //Light Source 1******************************
     //So they aren't on top of each other;
-    ModelMatrix=glm::translate(ModelMatrix,glm::vec3(0.0f,1.5f,0.0f));
+    
+    ModelMatrix=glm::translate(ModelMatrix,glm::vec3(0.0f,1.1f,0.0f));
 
     MVP = projectionMatrix * ModelMatrix;
 
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
-
+    
+    glBindVertexArray(vao2);
     glDrawArrays(GL_TRIANGLES, 0, object2Vert);
-    /****************************************************************/
+    
 
-    glDrawArrays(GL_TRIANGLES, 0, object1Vert);
+    
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)   
     SDL_GL_SwapWindow(sdlWin);

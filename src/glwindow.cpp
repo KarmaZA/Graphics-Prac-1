@@ -9,45 +9,14 @@
 /* When working on my laptop uncomment top 2*/
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtc/matrix_transform.hpp>
-//#include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-/*
-    simple.frag
 
-    #version 330 core
-
-in vec2 UV;
-out vec4 outColor;
-uniformt sampler2D myTexture;
-
-uniform vec3 objectColor;
-
-void main()
-{
-    outColor = vec4(texture(myTexture,UV).rgb,1);
-}
-
-simple.vert
-
-#version 330 core
-
-
-out vec2 UV;
-uniform mat4 MVP;
-
-void main()
-{
-    gl_Position = MVP * vec4(vertPos,1.0f);
-    UV = vertUV;
-
-}
-
-*/
 using namespace std;
 //Camera Declarations
 glm::vec3 cameraPos;
 glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,0.0f);
 glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
+//Light Declaration
+glm::vec3 lightPosition(0.0f,3.0f,0.0f);
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
 //projection, translation and rotation global declaration
@@ -79,7 +48,7 @@ bool drawModel2 =false;
 //Global declaration to access across methods
 int colorLoc;
 GLuint programID;
-GLuint vao2;
+GLuint lightVAO;
 
 //Vertex Count for the object global declaration
 GLuint object1Vert;
@@ -241,7 +210,8 @@ void OpenGLWindow::initGL()
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, object1Vert*3*sizeof(float), geometry.vertexData(), GL_STATIC_DRAW); 
 
-    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);
+    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
+    //glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(vertexLoc);
     glPrintError("Setup completed for object 1", true);
 
@@ -250,8 +220,8 @@ void OpenGLWindow::initGL()
     //**********************************************************
     //Object2
     //VAO here for object 2
-    glGenVertexArrays(1, &vao2);
-    glBindVertexArray(vao2);
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
 
     GeometryData geometry2;
     geometry2.loadFromOBJFile("cube.obj");
@@ -284,7 +254,7 @@ void OpenGLWindow::initGL()
 void OpenGLWindow::render()
 {   
     //clear color included by me
-    //glClearColor(0.1f,0.1f,0.1f,1.0f);
+    glClearColor(0.1f,0.1f,0.1f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clears the screen
     
 
@@ -303,8 +273,12 @@ void OpenGLWindow::render()
     
     /**Ambient lighting code*/
     GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLightColor");
-    glm::vec3 ambientLightColor(0.5f,1.0f,1.0f);
+    glm::vec3 ambientLightColor(1.0f,0.1f,0.1f);
     glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
+
+    GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
+    //lightPosition(0.0f,3.0f,0.0f);
+    glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
     /*********************************************/
     ModelMatrix= glm::mat4(1.0f);
@@ -332,7 +306,7 @@ void OpenGLWindow::render()
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
     
-    glBindVertexArray(vao2);
+    glBindVertexArray(lightVAO);
     glDrawArrays(GL_TRIANGLES, 0, object2Vert);
     
 

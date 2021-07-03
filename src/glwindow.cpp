@@ -40,7 +40,7 @@ GLfloat transZ = 0.0f;
 
 
 //Camera Orbit variables
-GLfloat countOrbit = 1;
+GLfloat countOrbit = 1.0f;
 float radius = 10.0f;
 //Loading Model 2
 bool drawModel2 =false;
@@ -216,7 +216,7 @@ void OpenGLWindow::initGL()
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(vertexLoc);
     /***************************************Normal Data Call*****************************************/
-    
+
     glVertexAttribPointer(normalLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(normalLoc);
     glPrintError("Setup completed for object 1", true);
@@ -265,9 +265,6 @@ void OpenGLWindow::render()
     
 
     /*******************************************Assignment 2 Camera Rotation**************************/   
-    cameraPos.x  = sin(countOrbit) * radius;
-    cameraPos.z = cos(countOrbit) * radius;
-    cameraPos *= 0.7f;
     WorldViewToMatrix = glm::lookAt(cameraPos,cameraDirection,UP);
 
     WorldViewToMatrix = glm::rotate(WorldViewToMatrix,glm::radians(rotAngleX),glm::vec3(1.0f,0.0f,0.0f));   
@@ -307,6 +304,11 @@ void OpenGLWindow::render()
 
     /*******************************************Light Source 1***************************************/
     //So they aren't on top of each other;
+    lightPosition.x  = sin(countOrbit) * radius;
+    lightPosition.z = cos(countOrbit) * radius;
+    lightPosition *= 0.7f;
+    countOrbit+=0.1f; //Switch to time if test works
+    //cout << lightPosition.x << "     " << lightPosition.z << endl;
     
     ModelMatrix=glm::translate(ModelMatrix,glm::vec3(0.0f,1.1f,0.0f));
 

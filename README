@@ -18,7 +18,7 @@ When running on Windows, you will need to have `SDL2.dll` and `glew32.dll` inclu
 For linux you simply need the `libsdl2-dev` and `libglew-dev` package installed.
 
 ================================================================
-EVRJON003 README
+EVRJON003 README Assignment2
 ================================================================
 This is the README file for Graphics Assignment 1.
 

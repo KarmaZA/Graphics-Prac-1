@@ -16,7 +16,7 @@ glm::vec3 cameraPos;
 glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,0.0f);
 glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
 //Light Declaration
-glm::vec3 lightPosition(0.0f,3.0f,0.0f);
+glm::vec3 lightPosition(1.0f,3.0f,1.5f);
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
 //projection, translation and rotation global declaration
@@ -201,23 +201,27 @@ void OpenGLWindow::initGL()
     //GeometryData geometry = loadOBJFile("tri.obj");
     GeometryData geometry;
     geometry.loadFromOBJFile("suzanne.obj");
-    float *vertexPositions = (float*)geometry.vertexData();
+    //float *vertexPositions = (float*)geometry.vertexData();
+    //float *normalPositions = (float*)geometry.normalData();
     object1Vert = geometry.vertexCount();
     int vertexLoc = glGetAttribLocation(shader, "position");
+    int normalLoc = glGetAttribLocation(shader, "aNormal");
     
     glGenBuffers(1, &vertexBuffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, object1Vert*3*sizeof(float), geometry.vertexData(), GL_STATIC_DRAW); 
 
+    //glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
-    //glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(vertexLoc);
+    /***************************************Normal Data Call*****************************************/
+    
+    glVertexAttribPointer(normalLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
+    glEnableVertexAttribArray(normalLoc);
     glPrintError("Setup completed for object 1", true);
 
-    
-
-    //**********************************************************
+    /************************************************************************************************/
     //Object2
     //VAO here for object 2
     glGenVertexArrays(1, &lightVAO);
@@ -236,7 +240,7 @@ void OpenGLWindow::initGL()
     glVertexAttribPointer(vertexLoc2, 3, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(vertexLoc2);
     glPrintError("Setup complete for object 2", true);
-    //**********************************************************/
+    /************************************************************************************************/
 
     /*
     *  Setting up the camera
@@ -248,17 +252,19 @@ void OpenGLWindow::initGL()
     //perspective
     projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 100.0f);
     VP=WorldViewToMatrix*projectionMatrix;
+    /************************************************************************************************/
 
 }
 
 void OpenGLWindow::render()
 {   
+    /************************************************************************************************/
     //clear color included by me
     glClearColor(0.1f,0.1f,0.1f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clears the screen
     
 
-    /************Assignment 2 Camera Rotation************/   
+    /*******************************************Assignment 2 Camera Rotation**************************/   
     cameraPos.x  = sin(countOrbit) * radius;
     cameraPos.z = cos(countOrbit) * radius;
     cameraPos *= 0.7f;
@@ -271,16 +277,19 @@ void OpenGLWindow::render()
     //cout << camX << "   " << camZ << endl;
     //VP=WorldViewToMatrix*projectionMatrix;
     
-    /**Ambient lighting code*/
+    /*******************************************Ambient Lighting************************************/
     GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLightColor");
     glm::vec3 ambientLightColor(1.0f,0.1f,0.1f);
     glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
 
+    /*******************************************Diffuse Lighting************************************/
     GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
     //lightPosition(0.0f,3.0f,0.0f);
     glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
+    
+    /*******************************************Specular Lighting************************************/
 
-    /*********************************************/
+    /************************************************************************************************/
     ModelMatrix= glm::mat4(1.0f);
     //Transform change
     ModelMatrix = glm::translate(ModelMatrix, glm::vec3(transX,transY,transZ));//cameraDirection);
@@ -296,7 +305,7 @@ void OpenGLWindow::render()
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, object1Vert);
 
-    //Light Source 1******************************
+    /*******************************************Light Source 1***************************************/
     //So they aren't on top of each other;
     
     ModelMatrix=glm::translate(ModelMatrix,glm::vec3(0.0f,1.1f,0.0f));
@@ -308,9 +317,9 @@ void OpenGLWindow::render()
     
     glBindVertexArray(lightVAO);
     glDrawArrays(GL_TRIANGLES, 0, object2Vert);
-    
 
-    
+    /************************************************************************************************/
+
     // Swap the front and back buffers on the window, effectively putting what we just "drew"
     // onto the screen (whereas previously it only existed in memory)   
     SDL_GL_SwapWindow(sdlWin);

@@ -4,6 +4,10 @@
 #include "SDL.h"
 #include <GL/glew.h>
 
+//STB_IMAGE.H
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "glwindow.h"
 #include "geometry.h"
 /* When working on my laptop uncomment top 2*/

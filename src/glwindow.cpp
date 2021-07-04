@@ -216,6 +216,7 @@ void OpenGLWindow::initGL()
     object1Vert = geometry.vertexCount();
     int vertexLoc = glGetAttribLocation(shader, "position");
     int normalLoc = glGetAttribLocation(shader, "aNormal");
+    int textureCoords = glGetAttribLocation(shader,"textureCoords");
     
     glGenBuffers(1, &vertexBuffer);
 
@@ -230,17 +231,21 @@ void OpenGLWindow::initGL()
     glVertexAttribPointer(normalLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(normalLoc);
 
+    /***************************************Texture Data SetUp*****************************************/
+
+    glVertexAttribPointer(textureCoords, 2, GL_FLOAT, true, 0, 0);//Switch with below
+    glEnableVertexAttribArray(textureCoords);
+
     /**********************************Texturing**************************************************************/
     //https://learnopengl.com/Getting-started/Textures
     int width, height, nrChannels;
-    //Using a wooden container image in the interim
     unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     
     //Parametrising the texture in case it doesnt fit
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     if (data){
@@ -250,6 +255,7 @@ void OpenGLWindow::initGL()
         cout << "failed to load the texture" << endl;
     }
     //Free the image memory
+
     stbi_image_free(data);
 
     glPrintError("Setup completed for object 1", true);
@@ -317,7 +323,7 @@ void OpenGLWindow::render()
     glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
     
     /*******************************************Specular Lighting************************************/
-
+    
     /************************************************************************************************/
     ModelMatrix= glm::mat4(1.0f);
     //Transform change
@@ -331,7 +337,9 @@ void OpenGLWindow::render()
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
     
     //bind
+    glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_TRIANGLES, 0, object1Vert);
 
     /*******************************************Light Source 1***************************************/
@@ -339,7 +347,7 @@ void OpenGLWindow::render()
     lightPosition.x  = sin(countOrbit) * radius;
     lightPosition.z = cos(countOrbit) * radius;
     lightPosition *= 0.7f;
-    countOrbit+=0.1f; //Switch to time if test works
+    countOrbit+=0.01f; //Switch to time if test works
     //cout << lightPosition.x << "     " << lightPosition.z << endl;
     
     ModelMatrix=glm::translate(ModelMatrix,glm::vec3(0.0f,1.1f,0.0f));

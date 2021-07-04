@@ -21,6 +21,10 @@ glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,0.0f);
 glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
 //Light Declaration
 glm::vec3 lightPosition(1.0f,3.0f,1.5f);
+//Texture Delcaration
+unsigned int texture;
+
+/*********************Assignment 1 Stuff *****************/
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
 //projection, translation and rotation global declaration
@@ -32,6 +36,7 @@ glm::mat4 ModelMatrix;
 GLint fullTransformMatrixUniformLocation;
 //MVP declaration
 glm::mat4 MVP;
+
 
 //Rotation Angles
 GLfloat rotAngleX = 0.0f;
@@ -188,6 +193,7 @@ void OpenGLWindow::initGL()
     glCullFace(GL_BACK);
     glClearColor(0,0,0,1);
 
+    /**********************************Suzanne**************************************************************/
     //VAO here for object 1 - Suzanne
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -219,13 +225,36 @@ void OpenGLWindow::initGL()
     //glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(vertexLoc);
-    /***************************************Normal Data Call*****************************************/
+    /***************************************Normal Data SetUp*****************************************/
 
     glVertexAttribPointer(normalLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(normalLoc);
+
+    /**********************************Texturing**************************************************************/
+    //https://learnopengl.com/Getting-started/Textures
+    int width, height, nrChannels;
+    //Using a wooden container image in the interim
+    unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    
+    //Parametrising the texture in case it doesnt fit
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    if (data){
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        cout << "failed to load the texture" << endl;
+    }
+    //Free the image memory
+    stbi_image_free(data);
+
     glPrintError("Setup completed for object 1", true);
 
-    /************************************************************************************************/
+    /*************************************Light Boxes Set Up**************************************/
     //Object2
     //VAO here for object 2
     glGenVertexArrays(1, &lightVAO);
@@ -256,8 +285,7 @@ void OpenGLWindow::initGL()
     //perspective
     projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 100.0f);
     VP=WorldViewToMatrix*projectionMatrix;
-    /************************************************************************************************/
-
+    
 }
 
 void OpenGLWindow::render()

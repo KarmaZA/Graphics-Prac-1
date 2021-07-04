@@ -266,8 +266,6 @@ void OpenGLWindow::initGL()
     glPrintError("Setup completed for object 1", true);
 
     /*************************************Light Boxes Set Up**************************************/
-    //Object2
-    //VAO here for object 2
     glGenVertexArrays(1, &lightVAO1);
     glBindVertexArray(lightVAO1);
 
@@ -284,7 +282,7 @@ void OpenGLWindow::initGL()
     glVertexAttribPointer(vertexLoc2, 3, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(vertexLoc2);
     glPrintError("Setup complete for object 2", true);
-    /************************************************************************************************/
+    /*******************************************Light Box 2*****************************************************/
     glGenVertexArrays(1, &lightVAO2);
     glBindVertexArray(lightVAO2);
 
@@ -302,13 +300,9 @@ void OpenGLWindow::initGL()
     glVertexAttribPointer(vertexLoc3, 3, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(vertexLoc3);
     glPrintError("Setup complete for object 2", true);
-    /************************************************************************************************/
-    /*
-    *  Setting up the camera
-    */
-    cameraPos = glm::vec3(3.0f,0.0f,5.0f);
-    //^Setting up a view position and a view direction for the camera
-    
+    /**************************************Setting up the camera********************************************/
+    cameraPos = glm::vec3(0.0f,0.0f,10.0f);
+
     WorldViewToMatrix = glm::lookAt(cameraPos, cameraPos + cameraDirection, UP);
     //perspective
     projectionMatrix =glm::perspective(glm::radians(60.0f),((float)640/480),0.1f, 100.0f);

@@ -13,8 +13,6 @@ out vec4 outColor;
 
 void main()
 {
-    //outColor = vec4(objectColor*lightColor,1);
-    outColor = vec4(objectColor*theColor,1);
-    outColor = texture(ourTexture, texCoord) * outColor;
+    outColor = texture(ourTexture, texCoord) * vec4(objectColor*theColor,1);
 }
 

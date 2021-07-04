@@ -20,7 +20,10 @@ glm::vec3 cameraPos;
 glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,0.0f);
 glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
 //Light Declaration
-glm::vec3 lightPosition(1.0f,3.0f,1.5f);
+glm::vec3 light1Position(1.0f,3.0f,1.5f);
+glm::vec3 light2Position;
+//AMBIENT COLOUR
+glm::vec3 ambientLightColor(1.0f,1.0f,1.0f);
 //Texture Delcaration
 unsigned int texture;
 
@@ -57,11 +60,13 @@ bool drawModel2 =false;
 //Global declaration to access across methods
 int colorLoc;
 GLuint programID;
-GLuint lightVAO;
+GLuint lightVAO1;
+GLuint lightVAO2;
 
 //Vertex Count for the object global declaration
 GLuint object1Vert;
 GLuint object2Vert;
+GLuint object3Vert;
 
 
 const char* glGetErrorString(GLenum error)
@@ -263,8 +268,8 @@ void OpenGLWindow::initGL()
     /*************************************Light Boxes Set Up**************************************/
     //Object2
     //VAO here for object 2
-    glGenVertexArrays(1, &lightVAO);
-    glBindVertexArray(lightVAO);
+    glGenVertexArrays(1, &lightVAO1);
+    glBindVertexArray(lightVAO1);
 
     GeometryData geometry2;
     geometry2.loadFromOBJFile("cube.obj");
@@ -280,7 +285,24 @@ void OpenGLWindow::initGL()
     glEnableVertexAttribArray(vertexLoc2);
     glPrintError("Setup complete for object 2", true);
     /************************************************************************************************/
+    glGenVertexArrays(1, &lightVAO2);
+    glBindVertexArray(lightVAO2);
 
+    GeometryData geometry3;
+    geometry3.loadFromOBJFile("cube.obj");
+
+    float *vertexPositions3 = (float*)geometry3.vertexData();
+    int vertexLoc3 = glGetAttribLocation(shader, "position");
+    object3Vert = geometry3.vertexCount();
+    
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, object3Vert*3*sizeof(float), geometry3.vertexData(), GL_STATIC_DRAW); 
+    
+    glVertexAttribPointer(vertexLoc3, 3, GL_FLOAT, true, 0, 0);
+    glEnableVertexAttribArray(vertexLoc3);
+    glPrintError("Setup complete for object 2", true);
+    /************************************************************************************************/
     /*
     *  Setting up the camera
     */
@@ -314,13 +336,12 @@ void OpenGLWindow::render()
     
     /*******************************************Ambient Lighting************************************/
     GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLightColor");
-    glm::vec3 ambientLightColor(1.0f,0.1f,0.1f);
     glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
 
     /*******************************************Diffuse Lighting************************************/
     GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
     //lightPosition(0.0f,3.0f,0.0f);
-    glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
+    glUniform3fv(lightPositionUniformLocation, 1, &light1Position[0]);
     
     /*******************************************Specular Lighting************************************/
     
@@ -344,21 +365,34 @@ void OpenGLWindow::render()
 
     /*******************************************Light Source 1***************************************/
     //So they aren't on top of each other;
-    lightPosition.x  = sin(countOrbit) * radius;
-    lightPosition.z = cos(countOrbit) * radius;
-    lightPosition *= 0.7f;
+    light1Position.x  = (sin(countOrbit) * radius) * 0.7f;
+    light1Position.z = (cos(countOrbit) * radius) * 0.7f;
     countOrbit+=0.01f; //Switch to time if test works
-    //cout << lightPosition.x << "     " << lightPosition.z << endl;
+    //cout << light1Position.x << "     " << light1Position.z << endl;
     
-    ModelMatrix=glm::translate(ModelMatrix,glm::vec3(0.0f,1.1f,0.0f));
+    ModelMatrix=glm::translate(ModelMatrix, light1Position);
 
     MVP = projectionMatrix * ModelMatrix;
 
-    fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
+    //fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
-    
-    glBindVertexArray(lightVAO);
+    glUniform3f(colorLoc, 1.0f, 1.0f, 1.0f);
+    glBindVertexArray(lightVAO1);
     glDrawArrays(GL_TRIANGLES, 0, object2Vert);
+
+    /*******************************************Light Source 2***************************************/
+    light2Position = light1Position * glm::vec3(-1);
+    light2Position.y = 1.0f;
+    ModelMatrix=glm::translate(ModelMatrix, light2Position);
+    //cout << light2Position.x << "     " << light2Position.z << endl;
+
+    MVP = projectionMatrix * ModelMatrix;
+
+    //fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
+    glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
+    glUniform3f(colorLoc, 1.0f, 1.0f, 1.0f);
+    glBindVertexArray(lightVAO2);
+    glDrawArrays(GL_TRIANGLES, 0, object3Vert);
 
     /************************************************************************************************/
 

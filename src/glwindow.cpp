@@ -26,7 +26,7 @@ glm::vec3 light2Position;
 glm::vec3 ambientLightColor(1.0f,1.0f,1.0f);
 //Texture Delcaration
 unsigned int texture;
-
+GLuint vertexBuffer3;
 /*********************Assignment 1 Stuff *****************/
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
@@ -238,6 +238,11 @@ void OpenGLWindow::initGL()
 
     /***************************************Texture Data SetUp*****************************************/
 
+    glGenBuffers(1, &vertexBuffer3);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer3);
+
+    glBufferData(GL_ARRAY_BUFFER, object1Vert*3*sizeof(float), geometry.textureCoordData(), GL_STATIC_DRAW);
     glVertexAttribPointer(textureCoords, 2, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(textureCoords);
 
@@ -350,7 +355,9 @@ void OpenGLWindow::render()
     //Uniform location of mat4 in simple.vert
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
-    
+    //TEXTURING
+    int uTexLoc = glGetUniformLocation(shader, "ourTexture");
+    glUniform1i(uTexLoc, 0);
     //bind
     glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(vao);

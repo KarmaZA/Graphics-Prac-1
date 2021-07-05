@@ -385,7 +385,7 @@ void OpenGLWindow::render()
     countOrbit+=0.01f; //Switch to time if test works
     
     //cout << light1Position.x << "     " << light1Position.z << endl;
-    
+    ModelMatrix = glm::mat4(1.0f);
     ModelMatrix=glm::translate(ModelMatrix, light1Position);
 
     MVP = projectionMatrix * ModelMatrix;

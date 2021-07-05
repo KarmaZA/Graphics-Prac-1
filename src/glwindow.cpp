@@ -27,6 +27,7 @@ glm::vec3 ambientLightColor(1.0f,1.0f,1.0f);
 //Texture Delcaration
 unsigned int texture;
 GLuint vertexBuffer3;
+GLuint vertexBuffer2;
 /*********************Assignment 1 Stuff *****************/
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
@@ -224,14 +225,15 @@ void OpenGLWindow::initGL()
     int textureCoords = glGetAttribLocation(shader,"textureCoords");
     
     glGenBuffers(1, &vertexBuffer);
-
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, object1Vert*3*sizeof(float), geometry.vertexData(), GL_STATIC_DRAW); 
 
-    //glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(vertexLoc);
     /***************************************Normal Data SetUp*****************************************/
+    glGenBuffers(1, &vertexBuffer2);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
+    glBufferData(GL_ARRAY_BUFFER, object1Vert*3*sizeof(float), geometry.normalData(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(normalLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(normalLoc);
@@ -239,17 +241,16 @@ void OpenGLWindow::initGL()
     /***************************************Texture Data SetUp*****************************************/
 
     glGenBuffers(1, &vertexBuffer3);
-
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer3);
-
     glBufferData(GL_ARRAY_BUFFER, object1Vert*3*sizeof(float), geometry.textureCoordData(), GL_STATIC_DRAW);
+
     glVertexAttribPointer(textureCoords, 2, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(textureCoords);
 
     /**********************************Texturing**************************************************************/
     //https://learnopengl.com/Getting-started/Textures
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("fish.jpg", &width, &height, &nrChannels, 0);
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     

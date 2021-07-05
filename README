@@ -20,6 +20,7 @@ For linux you simply need the `libsdl2-dev` and `libglew-dev` package installed.
 ================================================================
 EVRJON003 README Assignment2
 ================================================================
+
 For the second assignment there are two lighsources represented by cube in the scene. These rotate
 around the origin independently of each of and one is a clockwise and the other an anti-clockwise
  direction. Also one lightsource rotates above the object and the other below. Dark light boxes are
@@ -73,6 +74,9 @@ around the origin independently of each of and one is a clockwise and the other 
 T can also be used to reset position and rotation
 Movement: WASDQE with QE being the Z axis. 
 Rotation: UIO JKL in xyz syntax.
+
+Due to development issues glm is included in the file structure and
+that is the folder that is used by the includes.
 
 ================================================================
 ================================================================

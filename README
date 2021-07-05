@@ -20,15 +20,19 @@ For linux you simply need the `libsdl2-dev` and `libglew-dev` package installed.
 ================================================================
 EVRJON003 README Assignment2
 ================================================================
-This is the README file for Graphics Assignment 1.
+For the second assignment there are two lighsources represented by cube in the scene. These rotate
+around the origin independently of each of and one is a clockwise and the other an anti-clockwise
+ direction. Also one lightsource rotates above the object and the other below.
 
-The assignment has and compiles off the make file and so can be compiled with "make" and run with "make run".
+ The object can be moved around the scene using WASDQE.
 
-This program compiles and runs on the honours labs computers and the include statements may have to be changed if compiled on a different file structure.
+ The Camera can be rotated using UIOJKL but the object CANNOT be rotated.
 
-The .obj files that are loaded are included in the build folder and must be in that folder to be loaded into the program.
+ The camera and object can be reset pressing T.
 
-The program itself supports a number of transformations:
+ This project was developed on a linux OS and compiles using the command "make"
+ 
+ To run the project use the command "make run"
 
     Load in mode 2:
         load in model: 't'
@@ -40,10 +44,6 @@ The program itself supports a number of transformations:
         X axis decrease: 'u'
 		Y axis decrease: 'i'
 		Z axis decrease: 'o'
-
-	Scale:
-		Increase: 'g'
-		Decrease: 'f'
 	
 	Transforms
 		X positive: 'd'
@@ -53,24 +53,12 @@ The program itself supports a number of transformations:
 		Z positive: 't'
 		z negative: 'y'
 
-	Colour:
-		Red increase:   'z'
-		Green increase: 'x'
-		Blue increase:  'c'
-        Red decrease:   'b'
-		Green decrease: 'n'
-		Blue decrease:  'm'
 
 ================================================================
 
-Press T to start tracking the 2nd model
-T can also be used to reset the position of the two models.
-Movement are WASDQE with QE being the Z axis. 
-Rotation is UIO JKL in xyz syntax.
-Scale changes with G to grow and F to shrink(freeze and shrink).
-ZXC increase the rgb values and BNM reduces them. 
-
-You have to reduce the colour values before you can increase them.
+T can also be used to reset position and rotation
+Movement: WASDQE with QE being the Z axis. 
+Rotation: UIO JKL in xyz syntax.
 
 ================================================================
 ================================================================

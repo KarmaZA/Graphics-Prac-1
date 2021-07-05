@@ -23,10 +23,9 @@ void main()
 
     //Diffuse
     vec3 norm = normalize(Normal);
-    //vec3 lightVector = normalize(normalize(light1Position + light2Position) - FragPos);
-    //vec3 lightVector = normalize(light1Position- FragPos);
-    vec3 lightVector1 = normalize(light1Position- FragPos);
-    vec3 lightVector2 = normalize(light2Position- FragPos);
+    //vec3 lightVector = normalize(light1Position -FragPos);
+    vec3 lightVector1 = normalize(light1Position - FragPos);
+    vec3 lightVector2 = normalize(light2Position - FragPos);
     vec3 lightVector = max(lightVector1, lightVector2);
 
     float diff = max(dot(norm, lightVector), 0.0);

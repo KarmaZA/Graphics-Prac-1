@@ -7,7 +7,8 @@ in vec2 texCoord;
 uniform vec3 objectColor;
 uniform sampler2D ourTexture;
 uniform vec3 ambientLightColor;
-uniform vec3 lightPosition;
+uniform vec3 light1Position;
+uniform vec3 light2Position;
 uniform vec3 viewPos;
 
 out vec4 FragColor;
@@ -22,7 +23,11 @@ void main()
 
     //Diffuse
     vec3 norm = normalize(Normal);
-    vec3 lightVector = normalize(lightPosition - FragPos);
+    //vec3 lightVector = normalize(normalize(light1Position + light2Position) - FragPos);
+    //vec3 lightVector = normalize(light1Position- FragPos);
+    vec3 lightVector1 = normalize(light1Position- FragPos);
+    vec3 lightVector2 = normalize(light2Position- FragPos);
+    vec3 lightVector = max(lightVector1, lightVector2);
 
     float diff = max(dot(norm, lightVector), 0.0);
     vec3 diffuse = diff * ambientLightColor;

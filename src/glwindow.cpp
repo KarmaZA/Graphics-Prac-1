@@ -33,6 +33,8 @@ GLuint vertexBuffer2;
 GLint fullTransformMatrixUniformLocation;
 GLint fullTransformModelMatrixUniformLocation;
 GLint ambientLightUniformLocation;
+GLint light1PositionUniformLocation;
+GLint light2PositionUniformLocation;
 /*********************Assignment 1 Stuff *****************/
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
@@ -340,18 +342,20 @@ void OpenGLWindow::render()
     //cout << camX << "   " << camZ << endl;
     //VP=WorldViewToMatrix*projectionMatrix;
     
-    /*******************************************Ambient Lighting************************************/
+    /*******************************************Ambient Light************************************/
     ambientLightUniformLocation = glGetUniformLocation(shader, "ambientLightColor");
     glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
 
-    /*******************************************Diffuse Lighting************************************/
-    GLint lightPositionUniformLocation = glGetUniformLocation(shader, "lightPosition");
+    /*******************************************Light Positions************************************/
+    light1PositionUniformLocation = glGetUniformLocation(shader, "light1Position");
     //lightPosition(0.0f,3.0f,0.0f);
-    glUniform3fv(lightPositionUniformLocation, 1, &light1Position[0]);
+    glUniform3fv(light1PositionUniformLocation, 1, &light1Position[0]);
+
+    light2PositionUniformLocation = glGetUniformLocation(shader, "light2Position");
+    //lightPosition(0.0f,3.0f,0.0f);
+    glUniform3fv(light2PositionUniformLocation, 1, &light2Position[0]);
     
-    /*******************************************Specular Lighting************************************/
-    
-    /************************************************************************************************/
+    /******************************************************************************************/
     ModelMatrix= glm::mat4(1.0f);
     //Transform change
     ModelMatrix = glm::translate(ModelMatrix, glm::vec3(transX,transY,transZ));//cameraDirection);
@@ -393,8 +397,9 @@ void OpenGLWindow::render()
     glDrawArrays(GL_TRIANGLES, 0, object2Vert);
 
     /*******************************************Light Source 2***************************************/
-    light2Position = light1Position * glm::vec3(-1);
-    light2Position.y = 1.0f;
+    light2Position.z  = (sin(countOrbit) * radius) * 0.7f;
+    light2Position.x = (cos(countOrbit) * radius) * 0.7f;
+    light2Position.y = -5.0f;
     ModelMatrix=glm::translate(ModelMatrix, light2Position);
     //cout << light2Position.x << "     " << light2Position.z << endl;
 

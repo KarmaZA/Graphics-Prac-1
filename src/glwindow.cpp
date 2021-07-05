@@ -28,6 +28,11 @@ glm::vec3 ambientLightColor(1.0f,1.0f,1.0f);
 unsigned int texture;
 GLuint vertexBuffer3;
 GLuint vertexBuffer2;
+
+//uniform location
+GLint fullTransformMatrixUniformLocation;
+GLint fullTransformModelMatrixUniformLocation;
+GLint ambientLightUniformLocation;
 /*********************Assignment 1 Stuff *****************/
 //View transform matrix
 glm::mat4 WorldViewToMatrix;
@@ -36,8 +41,7 @@ glm::mat4 projectionMatrix;
 glm::mat4 VP;
 //Model
 glm::mat4 ModelMatrix;
-//Matrix in simple.vert uniform location
-GLint fullTransformMatrixUniformLocation;
+
 //MVP declaration
 glm::mat4 MVP;
 
@@ -248,7 +252,6 @@ void OpenGLWindow::initGL()
     glEnableVertexAttribArray(textureCoords);
 
     /**********************************Texturing**************************************************************/
-    //https://learnopengl.com/Getting-started/Textures
     int width, height, nrChannels;
     unsigned char *data = stbi_load("fish.jpg", &width, &height, &nrChannels, 0);
     glGenTextures(1, &texture);
@@ -335,11 +338,11 @@ void OpenGLWindow::render()
     //VP=WorldViewToMatrix*projectionMatrix;
     
     /*******************************************Ambient Lighting************************************/
-    GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLightColor");
+    ambientLightUniformLocation = glGetUniformLocation(shader, "ambientLightColor");
     glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
 
     /*******************************************Diffuse Lighting************************************/
-    GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
+    GLint lightPositionUniformLocation = glGetUniformLocation(shader, "lightPosition");
     //lightPosition(0.0f,3.0f,0.0f);
     glUniform3fv(lightPositionUniformLocation, 1, &light1Position[0]);
     
@@ -356,6 +359,9 @@ void OpenGLWindow::render()
     //Uniform location of mat4 in simple.vert
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
+
+    fullTransformModelMatrixUniformLocation = glGetUniformLocation(programID, "ModelMatrix");
+    glUniformMatrix4fv(fullTransformModelMatrixUniformLocation,1,GL_FALSE, &ModelMatrix[0][0]);
     //TEXTURING
     int uTexLoc = glGetUniformLocation(shader, "ourTexture");
     glUniform1i(uTexLoc, 0);
@@ -370,6 +376,7 @@ void OpenGLWindow::render()
     light1Position.x  = (sin(countOrbit) * radius) * 0.7f;
     light1Position.z = (cos(countOrbit) * radius) * 0.7f;
     countOrbit+=0.01f; //Switch to time if test works
+    
     //cout << light1Position.x << "     " << light1Position.z << endl;
     
     ModelMatrix=glm::translate(ModelMatrix, light1Position);

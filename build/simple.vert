@@ -6,8 +6,6 @@ in vec2 textureCoords;
 
 uniform mat4 MVP;
 uniform mat4 ModelMatrix;
-//uniform vec3 lightPosition;
-//uniform vec3 ambientLightColor;
 
 out vec3 FragPos;
 out vec3 Normal;

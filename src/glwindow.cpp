@@ -334,6 +334,9 @@ void OpenGLWindow::render()
     WorldViewToMatrix = glm::rotate(WorldViewToMatrix,glm::radians(rotAngleY),glm::vec3(0.0f,1.0f,0.0f));
     WorldViewToMatrix = glm::rotate(WorldViewToMatrix,glm::radians(rotAngleZ),glm::vec3(0.0f,0.0f,1.0f));
     VP=projectionMatrix*WorldViewToMatrix;
+    glm::vec3 viewPos = cameraPos;
+    GLuint viewPosUniformLocation = glGetUniformLocation(shader,"viewPos");
+    glUniform3fv(viewPosUniformLocation, 1, &viewPos[0]);
     //cout << camX << "   " << camZ << endl;
     //VP=WorldViewToMatrix*projectionMatrix;
     
@@ -368,7 +371,7 @@ void OpenGLWindow::render()
     //bind
     glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_TRIANGLES, 0, object1Vert);
 
     /*******************************************Light Source 1***************************************/

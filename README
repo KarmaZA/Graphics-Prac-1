@@ -24,7 +24,9 @@ For the second assignment there are two lighsources represented by cube in the s
 around the origin independently of each of and one is a clockwise and the other an anti-clockwise
  direction. Also one lightsource rotates above the object and the other below. Dark light boxes are
  included for convenience sake. They micmic the elliptical orbit of the lights around the object.
- Light colour can be changed to white and back using the keys 'g' and 'h'.
+ Light colour can be changed to white and back using the keys 'g' and 'h'. A github repository was used
+ for development of Assignment 1 and Assignment 2 the log and repository is included in the commit. On 
+ request I can also grant access to the repository online.
 
  If you move the object directly in front of the camera using 'e' you can see that light no longer
  falls on its face as there is no longer lighting from that angle.

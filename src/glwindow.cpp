@@ -20,12 +20,20 @@ glm::vec3 cameraPos;
 glm::vec3 cameraDirection = glm::vec3(0.0f,0.0f,0.0f);
 glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
 //Light Declaration
-glm::vec3 light1Position(1.0f,3.0f,1.5f);
+glm::vec3 lightPosition(1.0f,3.0f,1.5f);
 glm::vec3 light2Position;
 //AMBIENT COLOUR
 glm::vec3 ambientLightColor(1.0f,1.0f,1.0f);
 //Texture Delcaration
 unsigned int texture;
+
+//GLuint vertexBuffer2;
+
+//Uniform Locations
+GLint fullTransformMatrixUniformLocation;
+GLint fullTransformModelUniformLocation;
+GLint lightPositionUniformLocation; 
+GLint ambientLightUniformLocation;
 
 /*********************Assignment 1 Stuff *****************/
 //View transform matrix
@@ -35,8 +43,7 @@ glm::mat4 projectionMatrix;
 glm::mat4 VP;
 //Model
 glm::mat4 ModelMatrix;
-//Matrix in simple.vert uniform location
-GLint fullTransformMatrixUniformLocation;
+
 //MVP declaration
 glm::mat4 MVP;
 
@@ -203,9 +210,6 @@ void OpenGLWindow::initGL()
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    // Note that this path is relative to your working directory
-    // when running the program (IE if you run from within build
-    // then you need to place these files in build as well)
     shader = loadShaderProgram("simple.vert", "simple.frag");
     glUseProgram(shader);
 
@@ -231,7 +235,11 @@ void OpenGLWindow::initGL()
     //glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(vertexLoc);
-    /***************************************Normal Data SetUp*****************************************/
+    /***************************************Normal Data SetUp***************************************** /
+    glGenBuffers(1, &vertexBuffer2);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
+    glBufferData(GL_ARRAY_BUFFER, object1Vert*3*sizeof(float), geometry.normalData(), GL_STATIC_DRAW);*/
 
     glVertexAttribPointer(normalLoc, 3, GL_FLOAT, true, 0, 0);//Switch with below
     glEnableVertexAttribArray(normalLoc);
@@ -329,13 +337,13 @@ void OpenGLWindow::render()
     //VP=WorldViewToMatrix*projectionMatrix;
     
     /*******************************************Ambient Lighting************************************/
-    GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLightColor");
+    ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLightColor");
     glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
 
     /*******************************************Diffuse Lighting************************************/
-    GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
+    lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
     //lightPosition(0.0f,3.0f,0.0f);
-    glUniform3fv(lightPositionUniformLocation, 1, &light1Position[0]);
+    glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
     
     /*******************************************Specular Lighting************************************/
     
@@ -350,6 +358,10 @@ void OpenGLWindow::render()
     //Uniform location of mat4 in simple.vert
     fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "MVP");
     glUniformMatrix4fv(fullTransformMatrixUniformLocation,1,GL_FALSE, &MVP[0][0]);
+
+    glm::mat4 Model = ModelMatrix;
+    fullTransformModelUniformLocation = glGetUniformLocation(programID, "Model");
+    glUniformMatrix4fv(fullTransformModelUniformLocation,1,GL_FALSE, &Model[0][0]);
     
     //bind
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -359,12 +371,12 @@ void OpenGLWindow::render()
 
     /*******************************************Light Source 1***************************************/
     //So they aren't on top of each other;
-    light1Position.x  = (sin(countOrbit) * radius) * 0.7f;
-    light1Position.z = (cos(countOrbit) * radius) * 0.7f;
+    lightPosition.x  = (sin(countOrbit) * radius) * 0.7f;
+    lightPosition.z = (cos(countOrbit) * radius) * 0.7f;
     countOrbit+=0.01f; //Switch to time if test works
     //cout << light1Position.x << "     " << light1Position.z << endl;
     
-    ModelMatrix=glm::translate(ModelMatrix, light1Position);
+    ModelMatrix=glm::translate(ModelMatrix, lightPosition);
 
     MVP = projectionMatrix * ModelMatrix;
 
@@ -375,7 +387,7 @@ void OpenGLWindow::render()
     glDrawArrays(GL_TRIANGLES, 0, object2Vert);
 
     /*******************************************Light Source 2***************************************/
-    light2Position = light1Position * glm::vec3(-1);
+    light2Position = lightPosition * glm::vec3(-1);
     light2Position.y = 1.0f;
     ModelMatrix=glm::translate(ModelMatrix, light2Position);
     //cout << light2Position.x << "     " << light2Position.z << endl;

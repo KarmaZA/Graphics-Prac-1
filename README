@@ -22,7 +22,12 @@ EVRJON003 README Assignment2
 ================================================================
 For the second assignment there are two lighsources represented by cube in the scene. These rotate
 around the origin independently of each of and one is a clockwise and the other an anti-clockwise
- direction. Also one lightsource rotates above the object and the other below.
+ direction. Also one lightsource rotates above the object and the other below. Dark light boxes are
+ included for convenience sake. They micmic the elliptical orbit of the lights around the object.
+ Light colour can be changed to white and back using the keys 'g' and 'h'.
+
+ If you move the object directly in front of the camera using 'e' you can see that light no longer
+ falls on its face as there is no longer lighting from that angle.
 
  The object can be moved around the scene using WASDQE.
 
@@ -30,12 +35,19 @@ around the origin independently of each of and one is a clockwise and the other 
 
  The camera and object can be reset pressing T.
 
- This project was developed on a linux OS and compiles using the command "make"
+ Press g to set both lights to a white colour.
+
+ Press h to change lights back to their original colour.
+
+ This project was developed on a linux OS and compiles using the command "make".
  
- To run the project use the command "make run"
+ To run the project use the command "make run".
 
     Load in mode 2:
         load in model: 't'
+
+		White Lights: 'g'
+		Coloured Lights: 'h'
 
 	Rotation:
 		X axis increase: 'j'

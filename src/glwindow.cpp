@@ -23,7 +23,10 @@ glm::vec3 UP = glm::vec3(0.0f,1.0f,0.0f);
 glm::vec3 light1Position(1.0f,3.0f,1.5f);
 glm::vec3 light2Position;
 //AMBIENT COLOUR
-glm::vec3 ambientLightColor(1.0f,1.0f,1.0f);
+glm::vec3 ambientLightColor(0.3f,0.3f,0.3f);
+glm::vec3 ambientLightColor1(1.0f,0.5f,0.3f);
+glm::vec3 ambientLightColor2(0.1f,3.0f,1.0f);
+
 //Texture Delcaration
 unsigned int texture;
 GLuint vertexBuffer3;
@@ -33,6 +36,8 @@ GLuint vertexBuffer2;
 GLint fullTransformMatrixUniformLocation;
 GLint fullTransformModelMatrixUniformLocation;
 GLint ambientLightUniformLocation;
+GLint ambientLight1UniformLocation;
+GLint ambientLight2UniformLocation;
 GLint light1PositionUniformLocation;
 GLint light2PositionUniformLocation;
 /*********************Assignment 1 Stuff *****************/
@@ -345,6 +350,10 @@ void OpenGLWindow::render()
     /*******************************************Ambient Light************************************/
     ambientLightUniformLocation = glGetUniformLocation(shader, "ambientLightColor");
     glUniform3fv(ambientLightUniformLocation, 1, &ambientLightColor[0]);
+    ambientLight1UniformLocation = glGetUniformLocation(shader, "ambientLightColor1");
+    glUniform3fv(ambientLight1UniformLocation, 1, &ambientLightColor1[0]);
+    ambientLight2UniformLocation = glGetUniformLocation(shader, "ambientLightColor2");
+    glUniform3fv(ambientLight2UniformLocation, 1, &ambientLightColor2[0]);
 
     /*******************************************Light Positions************************************/
     light1PositionUniformLocation = glGetUniformLocation(shader, "light1Position");
@@ -442,6 +451,23 @@ bool OpenGLWindow::handleEvent(SDL_Event e)
             transX = 0.0f;
             transY = 0.0f;
             transZ = 0.0f;
+            //Light Colour
+            ambientLightColor = glm::vec3(0.3f,0.3f,0.3f);
+            ambientLightColor1 = glm::vec3(1.0f,0.5f,0.3f);
+            ambientLightColor2 = glm::vec3(0.1f,3.0f,1.0f);
+        }
+
+        //ROTATION      
+        if(e.key.keysym.sym == SDLK_g){
+            ambientLightColor = glm::vec3(1.0f,1.0f,1.0f);
+            ambientLightColor1 = glm::vec3(1.0f,1.0f,1.0f);
+            ambientLightColor2 = glm::vec3(1.0f,1.0f,1.0f);
+        }
+        //ROTATION      
+        if(e.key.keysym.sym == SDLK_h){
+            ambientLightColor = glm::vec3(0.3f,0.3f,0.3f);
+            ambientLightColor1 = glm::vec3(1.0f,0.5f,0.3f);
+            ambientLightColor2 = glm::vec3(0.1f,3.0f,1.0f);
         }
 
         //ROTATION      
